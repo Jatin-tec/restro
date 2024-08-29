@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Header } from "@/components/ui/dashboard/header";
-import { Sidebar } from "@/components/ui/dashboard/sidebar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   CircleHelp,
@@ -17,13 +15,6 @@ import {
   Truck,
   X,
 } from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -43,8 +34,56 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+import { MenuAccordion } from "./MenuAccordion";
+
 
 export default function Menu() {
+  const categoriesData = [
+    {
+      name: "Breakfast",
+      subCategories: [
+        {
+          name: "Egg Dishes",
+          menuItems: [
+            {
+              name: "Egg Omlete",
+              price: "₹49 +",
+              statusColor: "text-yellow-500",
+              description: "No time set, Turn item on stock manually"
+            },
+            {
+              name: "Chole Bhature",
+              price: "₹99 +",
+              statusColor: "text-green-500",
+              description: "No time set, Turn item on stock manually"
+            }
+          ]
+        },
+        {
+          name: "Pancakes",
+          menuItems: [
+            {
+              name: "Blueberry Pancake",
+              price: "₹150 +",
+              statusColor: "text-blue-500",
+              description: "Served with syrup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      name: "Main Course",
+      menuItems: [
+        {
+          name: "Chicken Biryani",
+          price: "₹250 +",
+          statusColor: "text-red-500",
+          description: "Served with raita"
+        }
+      ]
+    }
+  ];
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center">
@@ -59,89 +98,7 @@ export default function Menu() {
               <TabsTrigger value="addons">Add-ons</TabsTrigger>
               <TabsTrigger value="image">Images</TabsTrigger>
             </TabsList>
-            <TabsContent value="items" className="p-4">
-              <Accordion type="single" collapsible>
-                <AccordionItem value="item-1">
-                  <AccordionTrigger>
-                    <div className="flex gap-8">
-                      All Day Breakfast
-                      <Switch />
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <Accordion type="single" collapsible>
-                      <AccordionItem value="sub-cat">
-                        <AccordionTrigger>
-                          <div className="flex gap-8">
-                            Breakfast
-                            <Switch />
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="grid-cols-4 grid w-full hover:shadow-inner p-4">
-                            <div className="col-span-2">
-                              <span className="flex items-center font-bold">
-                                <SquareDot className="w-4 h-4 mr-2 text-green-500" />
-                                Chole Bhature
-                              </span>
-                              <p className="text-sm text-muted-foreground">
-                                No time set, Turn item on stock manually
-                              </p>
-                            </div>
-                            <p className="font-bold col-span-1 justify-center">
-                              ₹99 +
-                            </p>
-                            <div className="flex items-center gap-2 col-span-1 justify-end">
-                              <Switch />
-                              <Star className="w-6 h-6 text-gray-500 hover:fill-yellow-300" />
-                              <EllipsisVertical className="w-6 h-6 text-gray-500" />
-                            </div>
-                          </div>
-                          <div className="grid-cols-4 grid w-full hover:shadow-inner p-4">
-                            <div className="col-span-2">
-                              <span className="flex items-center font-bold">
-                                <SquareDot className="w-4 h-4 mr-2 text-yellow-500" />
-                                Egg Omlete
-                              </span>
-                              <p className="text-sm text-muted-foreground">
-                                No time set, Turn item on stock manually
-                              </p>
-                            </div>
-                            <p className="font-bold col-span-1 justify-center">
-                              ₹49 +
-                            </p>
-                            <div className="flex items-center gap-2 col-span-1 justify-end">
-                              <Switch />
-                              <Star className="w-6 h-6 text-gray-500 hover:fill-yellow-300" />
-                              <EllipsisVertical className="w-6 h-6 text-gray-500" />
-                            </div>
-                          </div>
-                          <div className="grid-cols-4 grid w-full hover:shadow-inner p-4">
-                            <div className="col-span-2">
-                              <span className="flex items-center font-bold">
-                                <SquareDot className="w-4 h-4 mr-2 text-red-500" />
-                                Chicken Omlete
-                              </span>
-                              <p className="text-sm text-muted-foreground">
-                                No time set, Turn item on stock manually
-                              </p>
-                            </div>
-                            <p className="font-bold col-span-1 justify-center">
-                              ₹199 +
-                            </p>
-                            <div className="flex items-center gap-2 col-span-1 justify-end">
-                              <Switch />
-                              <Star className="w-6 h-6 text-gray-500 hover:fill-yellow-300" />
-                              <EllipsisVertical className="w-6 h-6 text-gray-500" />
-                            </div>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </TabsContent>
+            <MenuAccordion categories={categoriesData} />
             <TabsContent value="password">
               Change your password here.
             </TabsContent>
