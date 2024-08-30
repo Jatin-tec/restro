@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Header } from "@/components/ui/dashboard/header";
-import { Sidebar } from "@/components/ui/dashboard/sidebar";
 
 export default function Dashboard() {
   return (

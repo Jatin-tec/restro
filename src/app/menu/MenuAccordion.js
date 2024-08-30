@@ -1,7 +1,5 @@
-// File: MenuAccordion.js
-
-'use client';
-
+"use client";
+import { useMenuContext } from "@/context/MenuContext";
 import {
   Accordion,
   AccordionContent,
@@ -16,7 +14,6 @@ import {
   Star,
 } from "lucide-react";
 
-
 // Recursive component to render categories, subcategories, and menu items
 function CategoryComponent({ category }) {
   return (
@@ -28,14 +25,17 @@ function CategoryComponent({ category }) {
           </div>
         </AccordionTrigger>
         <AccordionContent>
-          {category.subCategories ? (
+          {/* Check if sub_categories exists and has items */}
+          {Array.isArray(category.sub_categories) && category.sub_categories.length > 0 ? (
             // If subcategories exist, recursively render them
-            category.subCategories.map((subCategory) => (
+            category.sub_categories.map((subCategory) => (
               <CategoryComponent key={subCategory.name} category={subCategory} />
             ))
           ) : (
             // If no subcategories, render the menu items
-            category.menuItems.map((item) => <MenuItemComponent key={item.name} item={item} />)
+            category.food_items.map((item) => (
+              <MenuItemComponent key={item.name} item={item} />
+            ))
           )}
         </AccordionContent>
       </AccordionItem>
@@ -44,31 +44,34 @@ function CategoryComponent({ category }) {
 }
 
 function MenuItemComponent({ item }) {
+  const { toggleItemStockStatus, toggleItemFeaturedStatus, handleItemClick } = useMenuContext();
   return (
-    <div className="grid grid-cols-4 w-full hover:shadow-inner p-4">
+    <div className="grid grid-cols-4 w-full hover:shadow-inner p-4" onClick={() => handleItemClick(item)}>
       <div className="col-span-2">
         <span className="flex items-center font-bold">
-          <SquareDot className={`w-4 h-4 mr-2 ${item.statusColor}`} />
+          <SquareDot className={`w-4 h-4 mr-2 ${item.status_color}`} />
           {item.name}
         </span>
         <p className="text-sm text-muted-foreground">{item.description}</p>
       </div>
       <p className="font-bold col-span-1 text-center">{item.price}</p>
       <div className="flex items-center gap-2 col-span-1 justify-end">
-        <Switch />
+        <Switch onClick={() => toggleItemStockStatus()}/>
         <Star className="w-6 h-6 text-gray-500 hover:fill-yellow-300" />
         <EllipsisVertical className="w-6 h-6 text-gray-500" />
       </div>
-    </div>
+    </div> 
   );
 }
 
 export function MenuAccordion({ categories }) {
-  console.log(categories, "categories");
   return (
     <TabsContent value="items" className="p-4">
       {categories && categories.map((category) => (
-        <CategoryComponent key={category.name} category={category} />
+        <CategoryComponent
+          key={category.name}
+          category={category}
+        />
       ))}
     </TabsContent>
   );
