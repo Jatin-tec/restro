@@ -63,9 +63,7 @@ export default function Manage() {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center">
-        <h1 className="text-lg font-semibold md:text-2xl">
-          Manage Restaurant
-        </h1>
+        <h1 className="text-lg font-semibold md:text-2xl">Manage Restaurant</h1>
       </div>
       <Tabs defaultValue="account" className="w-full">
         <TabsList>
@@ -98,11 +96,7 @@ export default function Manage() {
                 <Input type="email" id="email" placeholder="Email" />
 
                 <Label htmlFor="email">Phone</Label>
-                <Input
-                  type="phone"
-                  id="email"
-                  placeholder="+91-8877665522"
-                />
+                <Input type="phone" id="email" placeholder="+91-8877665522" />
 
                 <Label>Select Services</Label>
 
@@ -149,8 +143,8 @@ export default function Manage() {
                         />
                       </svg>
                       <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span class="font-semibold">Click to upload</span>{" "}
-                        or drag and drop
+                        <span class="font-semibold">Click to upload</span> or
+                        drag and drop
                       </p>
                       <p class="text-xs text-gray-500 dark:text-gray-400">
                         SVG, PNG, JPG or GIF (MAX. 800x400px)
@@ -180,9 +174,7 @@ export default function Manage() {
                   </SelectContent>
                 </Select>
 
-                <Label htmlFor="septime">
-                  Time slots separated in minutes
-                </Label>
+                <Label htmlFor="septime">Time slots separated in minutes</Label>
                 <Select id="septime">
                   <SelectTrigger>
                     <SelectValue placeholder="Select Time" />

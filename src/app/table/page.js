@@ -9,8 +9,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { Edit, QrCode, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const tables = [
   {
@@ -37,8 +54,8 @@ export function TableList() {
         <div className="flex justify-between">
           <h2 className="text-lg font-semibold">Tables</h2>
           <div className="flex items-center gap-4">
-            <Button className="bg-primary text-white">+ Add Table</Button>
-            <Button className="bg-primary text-white">+ Add Area</Button>
+            <AddTable />
+            <AddArea />
           </div>
         </div>
       </CardHeader>
@@ -77,11 +94,80 @@ export default function TablePage() {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center">
-        <h1 className="text-lg font-semibold md:text-2xl">
-          Table Management
-        </h1>
+        <h1 className="text-lg font-semibold md:text-2xl">Table Management</h1>
       </div>
       <TableList />
     </main>
+  );
+}
+
+function AddArea() {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button>Add Area</Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 mr-[6.5vh]">
+        <div className="grid gap-4">
+          <div className="space-y-2">
+            <h4 className="font-medium leading-none">Add Area</h4>
+            <p className="text-sm text-muted-foreground">
+              Areas where tables are placed.
+            </p>
+          </div>
+
+          <div>
+            <Label htmlFor="width">Name</Label>
+            <Input
+              id="width"
+              placeholder="Area name"
+              className="col-span-2 h-8"
+            />
+          </div>
+          <Button>Save</Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function AddTable() {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button>Add Table</Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 mr-[6.5vh]">
+        <div className="grid gap-4">
+          <div className="space-y-2">
+            <h4 className="font-medium leading-none">Add Table</h4>
+            <p className="text-sm text-muted-foreground">
+              Select area and add table.
+            </p>
+          </div>
+
+          <div>
+            <Label htmlFor="number">Number</Label>
+            <Input
+              id="number"
+              placeholder="Area name"
+              className="col-span-2 h-8"
+            />
+            <Label htmlFor="area">Area</Label>
+            <Select id="area">
+              <SelectTrigger>
+                <SelectValue placeholder="Select Area" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="light">Light</SelectItem>
+                <SelectItem value="dark">Dark</SelectItem>
+                <SelectItem value="system">System</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button>Save</Button>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }

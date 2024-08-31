@@ -8,11 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { TabsContent } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
-import {
-  EllipsisVertical,
-  SquareDot,
-  Star,
-} from "lucide-react";
+import { EllipsisVertical, SquareDot, Star } from "lucide-react";
 
 // Recursive component to render categories, subcategories, and menu items
 function CategoryComponent({ category }) {
@@ -20,23 +16,23 @@ function CategoryComponent({ category }) {
     <Accordion type="single" collapsible>
       <AccordionItem value={category.name}>
         <AccordionTrigger>
-          <div className="flex gap-8">
-            {category.name}
-          </div>
+          <div className="flex gap-8">{category.name}</div>
         </AccordionTrigger>
         <AccordionContent>
           {/* Check if sub_categories exists and has items */}
-          {Array.isArray(category.sub_categories) && category.sub_categories.length > 0 ? (
-            // If subcategories exist, recursively render them
-            category.sub_categories.map((subCategory) => (
-              <CategoryComponent key={subCategory.name} category={subCategory} />
-            ))
-          ) : (
-            // If no subcategories, render the menu items
-            category.food_items.map((item) => (
-              <MenuItemComponent key={item.name} item={item} />
-            ))
-          )}
+          {Array.isArray(category.sub_categories) &&
+          category.sub_categories.length > 0
+            ? // If subcategories exist, recursively render them
+              category.sub_categories.map((subCategory) => (
+                <CategoryComponent
+                  key={subCategory.name}
+                  category={subCategory}
+                />
+              ))
+            : // If no subcategories, render the menu items
+              category.food_items.map((item) => (
+                <MenuItemComponent key={item.name} item={item} />
+              ))}
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -44,11 +40,15 @@ function CategoryComponent({ category }) {
 }
 
 function MenuItemComponent({ item }) {
-  const { toggleItemStockStatus, toggleItemFeaturedStatus, handleItemClick } = useMenuContext();
+  const { toggleItemStockStatus, toggleItemFeaturedStatus, handleItemClick } =
+    useMenuContext();
   return (
-    <div className="grid grid-cols-4 w-full hover:shadow-inner p-4" onClick={() => handleItemClick(item)}>
+    <div
+      className="grid grid-cols-4 w-full hover:shadow-sm p-4 border-b"
+      onClick={() => handleItemClick(item)}
+    >
       <div className="col-span-2">
-        <span className="flex items-center font-bold">
+        <span className="flex items-center font-bold cursor-pointer">
           <SquareDot className={`w-4 h-4 mr-2 ${item.status_color}`} />
           {item.name}
         </span>
@@ -56,23 +56,21 @@ function MenuItemComponent({ item }) {
       </div>
       <p className="font-bold col-span-1 text-center">{item.price}</p>
       <div className="flex items-center gap-2 col-span-1 justify-end">
-        <Switch onClick={() => toggleItemStockStatus()}/>
+        <Switch onClick={() => toggleItemStockStatus()} />
         <Star className="w-6 h-6 text-gray-500 hover:fill-yellow-300" />
         <EllipsisVertical className="w-6 h-6 text-gray-500" />
       </div>
-    </div> 
+    </div>
   );
 }
 
 export function MenuAccordion({ categories }) {
   return (
     <TabsContent value="items" className="p-4">
-      {categories && categories.map((category) => (
-        <CategoryComponent
-          key={category.name}
-          category={category}
-        />
-      ))}
+      {categories &&
+        categories.map((category) => (
+          <CategoryComponent key={category.name} category={category} />
+        ))}
     </TabsContent>
   );
 }

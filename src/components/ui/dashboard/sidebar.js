@@ -1,19 +1,18 @@
+"use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
+  BadgePercent,
   Bell,
   ChefHat,
-  CircleUser,
   Grid2X2,
   Home,
   LineChart,
-  Menu,
-  Package,
-  Package2,
   QrCode,
   Salad,
-  Search,
   ShoppingCart,
   Store,
+  TvMinimal,
   Users,
 } from "lucide-react";
 
@@ -28,6 +27,32 @@ import {
 } from "@/components/ui/card";
 
 export function Sidebar() {
+  const pathname = usePathname();
+
+  const navItems = [
+    { href: "/dashboard", label: "Dashboard", icon: Home },
+    {
+      href: "#",
+      label: "POS",
+      icon: TvMinimal,
+      badge: "Coming Soon",
+    },
+    {
+      href: "/orders",
+      label: "Live Orders",
+      icon: ShoppingCart,
+      badgeCount: 2,
+    },
+    { href: "/orders/all", label: "Orders", icon: ShoppingCart, badgeCount: 6 },
+    { href: "/menu", label: "Menu", icon: Salad },
+    { href: "/table", label: "Tables", icon: Grid2X2 },
+    { href: "/offers", label: "Offers", icon: BadgePercent },
+    { href: "/restaurant", label: "Outlet", icon: Store },
+    { href: "#", label: "QR Codes", icon: QrCode },
+    { href: "#", label: "Customers", icon: Users },
+    { href: "#", label: "Finance", icon: LineChart },
+  ];
+
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
@@ -43,78 +68,34 @@ export function Sidebar() {
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-            <Link
-              href="/dashboard"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Home className="h-4 w-4" />
-              Dashboard
-            </Link>
-            <Link
-              href="/orders"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-              </span>
-              Live Orders
-              <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                2
-              </Badge>
-            </Link>
-            <Link
-              href="/orders/all"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <ShoppingCart className="h-4 w-4" />
-              Orders
-              <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                6
-              </Badge>
-            </Link>
-            <Link
-              href="/menu"
-              className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
-            >
-              <Salad className="h-4 w-4" />
-              Menu
-            </Link>
-            <Link
-              href="table"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Grid2X2 className="h-4 w-4" />
-              Tables
-            </Link>
-            <Link
-              href="/restaurant"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Store className="h-4 w-4" />
-              Outlet
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <QrCode className="h-4 w-4" />
-              QR Codes
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Users className="h-4 w-4" />
-              Customers
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <LineChart className="h-4 w-4" />
-              Finance
-            </Link>
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${
+                    isActive ? "bg-muted text-primary" : ""
+                  }`}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.label}
+                  {item.badge && (
+                    <Badge
+                      variant="outline"
+                      className="ml-auto flex h-6 shrink-0 items-center justify-center rounded-full"
+                    >
+                      {item.badge}
+                    </Badge>
+                  )}
+                  {item.badgeCount && (
+                    <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                      {item.badgeCount}
+                    </Badge>
+                  )}
+                </Link>
+              );
+            })}
           </nav>
         </div>
         <div className="mt-auto p-4">
