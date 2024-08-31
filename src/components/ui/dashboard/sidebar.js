@@ -95,14 +95,14 @@ export function Sidebar() {
               Outlet
             </Link>
             <Link
-              href="#"
+              href="/build-qr"
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
             >
               <QrCode className="h-4 w-4" />
               QR Codes
             </Link>
             <Link
-              href="#"
+              href="/customers"
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
             >
               <Users className="h-4 w-4" />
