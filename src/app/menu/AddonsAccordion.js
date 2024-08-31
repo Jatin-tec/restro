@@ -6,7 +6,6 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import { TabsContent } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
 import {
     EllipsisVertical,
     SquareDot,
