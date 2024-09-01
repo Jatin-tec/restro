@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useMenuContext } from "@/context/MenuContext";
 import {
   Accordion,
@@ -13,7 +13,7 @@ import { EllipsisVertical, SquareDot, Star } from "lucide-react";
 // Recursive component to render categories, subcategories, and menu items
 function CategoryComponent({ category }) {
   return (
-    <Accordion type="single" collapsible>
+    <Accordion type="single" collapsible value={category.name}>
       <AccordionItem value={category.name}>
         <AccordionTrigger>
           <div className="flex gap-8">{category.name}</div>

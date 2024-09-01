@@ -59,7 +59,6 @@ function AddonItemComponent({ item, handleItemClick }) {
 }
 
 export function AddonsAccordion({ categories = [], handleItemClick }) {
-    console.log(categories, "categories");
     return (
         <TabsContent value="addons" className="p-4">
             {categories.map((category) => (

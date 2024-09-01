@@ -40,7 +40,6 @@ export function EditForm() {
 
   useEffect(() => {
     setFormData(selectedItem);
-    console.log(selectedItem, "selectedItem");
   }, [selectedItem]);
 
   const handleInputChange = (e) => {

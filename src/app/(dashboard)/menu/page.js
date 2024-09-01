@@ -13,10 +13,10 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { logout } from "@/auth/lib";
 
-export default async function Menu() {
-  const items = await apiGet("/api/shop/menu/1");
-
+async function Menu() {
+  const [items, status] = await apiGet("/api/shop/menu");
   const addonsData = [
     {
       name: "Condiments",
@@ -95,3 +95,5 @@ function AddItem() {
     </Popover>
   );
 }
+
+export default Menu;
