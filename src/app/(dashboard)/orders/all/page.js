@@ -1,3 +1,4 @@
+import { NewOrder } from "../newOrder";
 import { OrderTable } from "./data";
 
 export default function Dashboard() {
@@ -7,6 +8,7 @@ export default function Dashboard() {
         <h1 className="text-lg font-semibold md:text-2xl">Orders</h1>
       </div>
       <OrderTable />
+      <NewOrder />
     </main>
   );
 }
