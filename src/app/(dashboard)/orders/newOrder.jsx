@@ -1,3 +1,7 @@
+"use client";
+import React, { useRef } from "react";
+import InvoiceTemplate from "@/components/ui/bill/printInvoice";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +20,18 @@ import { Printer, UtensilsCrossed, VolumeX } from "lucide-react";
 import Image from "next/image";
 
 export function NewOrder() {
+  const printRef = useRef();
+
+  const handlePrint = () => {
+    const printContents = printRef.current.innerHTML;
+    const originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+    window.location.reload();
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -86,10 +102,13 @@ export function NewOrder() {
           </div>
           <Separator />
           <div className="flex items-center justify-between mt-2 gap-4">
-            <Button className="w-full" variant="outline">
+            <Button onClick={handlePrint} className="w-full" variant="outline">
               <Printer className="w-5 h-5 mr-2" />
               Print Bill
             </Button>
+            <div className="hidden">
+              <InvoiceTemplate ref={printRef} />
+            </div>
             <Button className="w-full">Start Preparing</Button>
           </div>
         </div>
