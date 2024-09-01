@@ -6,11 +6,14 @@ export const metadata = {
   title: "Login",
   description: "Seller Dashboard",
 };
+import { UserProvider } from "@/context/UserContext";
 
 export default function AuthLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <UserProvider>
+        <body className={inter.className}>{children}</body>
+      </UserProvider>
     </html>
   );
 }
