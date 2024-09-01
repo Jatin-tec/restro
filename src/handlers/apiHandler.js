@@ -40,7 +40,7 @@ const apiRequest = async (endpoint, options = {}, timeout = 10000) => {
 
     try {
         const response = await fetch(`${BASE_URL}${endpoint}`, config);
-
+        console.log(response);
         if (!response.ok) {
             // Check if response status is not OK (e.g., 404, 500)
             throw new HttpError(response.status, response.statusText, response.url);
