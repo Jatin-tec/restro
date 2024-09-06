@@ -24,10 +24,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Edit, QrCode, Trash } from "lucide-react";
+import { Edit, QrCode, ScanQrCode, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import QrDialog from "./qr";
 
 const tables = [
   {
@@ -49,16 +50,7 @@ const tables = [
 
 export function TableList() {
   return (
-    <Card className="p-4">
-      <CardHeader>
-        <div className="flex justify-between">
-          <h2 className="text-lg font-semibold">Tables</h2>
-          <div className="flex items-center gap-4">
-            <AddTable />
-            <AddArea />
-          </div>
-        </div>
-      </CardHeader>
+    <Card className="py-8">
       <CardContent>
         <Table>
           <TableCaption>A list of your recent invoices.</TableCaption>
@@ -77,7 +69,7 @@ export function TableList() {
                 <TableCell>{name.size}</TableCell>
                 <TableCell>{name.area}</TableCell>
                 <TableCell className="justify-end flex gap-2">
-                  <QrCode />
+                  <QrDialog />
                   <Edit />
                   <Trash />
                 </TableCell>
@@ -95,6 +87,10 @@ export default function TablePage() {
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">Table Management</h1>
+        <div className="flex items-center gap-4 ml-auto">
+          <AddTable />
+          <AddArea />
+        </div>
       </div>
       <TableList />
     </main>

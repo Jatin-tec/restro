@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Bar,
@@ -15,7 +15,7 @@ import {
   YAxis,
   CartesianGrid,
   ReferenceLine,
-} from "recharts"
+} from "recharts";
 
 import {
   Card,
@@ -24,13 +24,22 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { useState } from "react"
+} from "@/components/ui/chart";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
+import { Activity, CreditCard, DollarSign, Users } from "lucide-react";
 
 // Data for charts
 const orderData = [
@@ -93,9 +102,9 @@ const topSellingData = {
   ],
 };
 
-export default function Charts() {
-  const [filter, setFilter] = useState('last30Days');
-  
+export function Charts() {
+  const [filter, setFilter] = useState("last30Days");
+
   return (
     <div className="chart-wrapper mx-auto flex flex-col flex-wrap items-start justify-center gap-6 p-6 sm:p-8">
       <div className="grid w-full gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
@@ -143,7 +152,7 @@ export default function Charts() {
                   tickFormatter={(value) => {
                     return new Date(value).toLocaleDateString("en-US", {
                       weekday: "short",
-                    })
+                    });
                   }}
                 />
                 <ChartTooltip
@@ -156,7 +165,7 @@ export default function Charts() {
                           day: "numeric",
                           month: "long",
                           year: "numeric",
-                        })
+                        });
                       }}
                     />
                   }
@@ -192,9 +201,8 @@ export default function Charts() {
               <span className="font-medium text-foreground">450</span> orders.
             </CardDescription>
             <CardDescription>
-              You need{" "}
-              <span className="font-medium text-foreground">350</span> more
-              orders to reach your goal.
+              You need <span className="font-medium text-foreground">350</span>{" "}
+              more orders to reach your goal.
             </CardDescription>
           </CardFooter>
         </Card>
@@ -203,18 +211,18 @@ export default function Charts() {
             <div>
               <CardDescription>Average Revenue</CardDescription>
               <CardTitle className="text-3xl tabular-nums">
-                $3,200
+                ₹3,200
                 <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                  USD
+                  INR
                 </span>
               </CardTitle>
             </div>
             <div>
               <CardDescription>Daily Revenue</CardDescription>
               <CardTitle className="text-3xl tabular-nums">
-                $450
+                ₹450
                 <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                  USD
+                  INR
                 </span>
               </CardTitle>
             </div>
@@ -254,7 +262,7 @@ export default function Charts() {
                   tickFormatter={(value) => {
                     return new Date(value).toLocaleDateString("en-US", {
                       weekday: "short",
-                    })
+                    });
                   }}
                 />
                 <Line
@@ -273,7 +281,7 @@ export default function Charts() {
                           day: "numeric",
                           month: "long",
                           year: "numeric",
-                        })
+                        });
                       }}
                     />
                   }
@@ -288,9 +296,9 @@ export default function Charts() {
           <CardHeader className="flex flex-col space-y-2 pb-2">
             <CardDescription>Monthly Revenue</CardDescription>
             <CardTitle className="text-3xl tabular-nums">
-              $12,000{" "}
+              ₹12,000{" "}
               <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                USD
+                INR
               </span>
             </CardTitle>
           </CardHeader>
@@ -337,7 +345,7 @@ export default function Charts() {
                     <ChartTooltipContent
                       indicator="bar"
                       labelFormatter={(value) => {
-                        return `Month: ${value}`
+                        return `Month: ₹{value}`;
                       }}
                     />
                   }
@@ -372,7 +380,10 @@ export default function Charts() {
                   label
                 >
                   {salesData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={`hsl(var(--chart-${index + 1}))`} />
+                    <Cell
+                      key={`cell-₹{index}`}
+                      fill={`hsl(var(--chart-₹{index + 1}))`}
+                    />
                   ))}
                 </Pie>
                 <ChartTooltip
@@ -380,7 +391,7 @@ export default function Charts() {
                     <ChartTooltipContent
                       indicator="pie"
                       labelFormatter={(value) => {
-                        return `Category: ${value}`
+                        return `Category: ₹{value}`;
                       }}
                     />
                   }
@@ -395,16 +406,21 @@ export default function Charts() {
             <CardDescription>Filter by time range</CardDescription>
             <div className="flex gap-4">
               <label htmlFor="timeRange">Time Range: </label>
-              <select
+
+              <Select
                 id="timeRange"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="form-select"
               >
-                <option value="last30Days">Last 30 Days</option>
-                <option value="last365Days">Last 365 Days</option>
-                <option value="overall">Overall</option>
-              </select>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Time Range" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="last30Days">Last 30 Days</SelectItem>
+                  <SelectItem value="last365Days">Last Year</SelectItem>
+                  <SelectItem value="overall">Overall</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </CardHeader>
           <CardContent className="w-full">
@@ -426,11 +442,7 @@ export default function Charts() {
                 }}
                 data={topSellingData[filter]}
               >
-                <Bar
-                  dataKey="sales"
-                  fill="var(--color-top-selling)"
-                  radius={5}
-                >
+                <Bar dataKey="sales" fill="var(--color-top-selling)" radius={5}>
                   <LabelList
                     dataKey="sales"
                     position="top"
@@ -449,7 +461,7 @@ export default function Charts() {
                     <ChartTooltipContent
                       indicator="bar"
                       labelFormatter={(value) => {
-                        return `Item: ${value}`
+                        return `Item: ₹{value}`;
                       }}
                     />
                   }
@@ -460,5 +472,250 @@ export default function Charts() {
         </Card>
       </div>
     </div>
-  )
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+      <div className="flex items-center">
+        <h1 className="text-lg font-semibold md:text-2xl">Dashboard</h1>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+        <Card x-chunk="dashboard-01-chunk-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">₹45,231.89</div>
+            <p className="text-xs text-muted-foreground">
+              +20.1% from last month
+            </p>
+          </CardContent>
+        </Card>
+        <Card x-chunk="dashboard-01-chunk-1">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Subscriptions</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">+2350</div>
+            <p className="text-xs text-muted-foreground">
+              +180.1% from last month
+            </p>
+          </CardContent>
+        </Card>
+        <Card x-chunk="dashboard-01-chunk-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Sales</CardTitle>
+            <CreditCard className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">+12,234</div>
+            <p className="text-xs text-muted-foreground">
+              +19% from last month
+            </p>
+          </CardContent>
+        </Card>
+        <Card x-chunk="dashboard-01-chunk-3">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Now</CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">+573</div>
+            <p className="text-xs text-muted-foreground">
+              +201 since last hour
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid w-full gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+        <Card className="flex flex-col" x-chunk="charts-01-chunk-0">
+          <CardHeader className="space-y-0 pb-2">
+            <CardDescription>Orders Today</CardDescription>
+            <CardTitle className="text-3xl tabular-nums">
+              350{" "}
+              <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
+                orders
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer
+              config={{
+                orders: {
+                  label: "Orders",
+                  color: "hsl(var(--chart-1))",
+                },
+              }}
+            >
+              <BarChart
+                accessibilityLayer
+                margin={{
+                  left: 0,
+                  right: 0,
+                  top: 10,
+                  bottom: 0,
+                }}
+                data={orderData}
+              >
+                <Bar
+                  dataKey="orders"
+                  fill="var(--color-orders)"
+                  radius={5}
+                  fillOpacity={0.6}
+                  activeBar={<Rectangle fillOpacity={0.8} />}
+                />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={4}
+                  tickFormatter={(value) => {
+                    return new Date(value).toLocaleDateString("en-US", {
+                      weekday: "short",
+                    });
+                  }}
+                />
+                <ChartTooltip
+                  defaultIndex={2}
+                  content={
+                    <ChartTooltipContent
+                      hideIndicator
+                      labelFormatter={(value) => {
+                        return new Date(value).toLocaleDateString("en-US", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        });
+                      }}
+                    />
+                  }
+                  cursor={false}
+                />
+                <ReferenceLine
+                  y={60}
+                  stroke="hsl(var(--muted-foreground))"
+                  strokeDasharray="3 3"
+                  strokeWidth={1}
+                >
+                  <Label
+                    position="insideBottomLeft"
+                    value="Average Orders"
+                    offset={10}
+                    fill="hsl(var(--foreground))"
+                  />
+                  <Label
+                    position="insideTopLeft"
+                    value="60"
+                    className="text-lg"
+                    fill="hsl(var(--foreground))"
+                    offset={10}
+                    startOffset={100}
+                  />
+                </ReferenceLine>
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+          <CardFooter className="flex-col items-start gap-1">
+            <CardDescription>
+              Over the past 7 days, you have had{" "}
+              <span className="font-medium text-foreground">450</span> orders.
+            </CardDescription>
+            <CardDescription>
+              You need <span className="font-medium text-foreground">350</span>{" "}
+              more orders to reach your goal.
+            </CardDescription>
+          </CardFooter>
+        </Card>
+        <Card className="flex flex-col" x-chunk="charts-01-chunk-1">
+          <CardHeader className="flex flex-col space-y-2 pb-2">
+            <div>
+              <CardDescription>Average Revenue</CardDescription>
+              <CardTitle className="text-3xl tabular-nums">
+                ₹3,200
+                <span className="text-sm font-normal tracking-normal text-muted-foreground">
+                  INR
+                </span>
+              </CardTitle>
+            </div>
+            <div>
+              <CardDescription>Daily Revenue</CardDescription>
+              <CardTitle className="text-3xl tabular-nums">
+                ₹450
+                <span className="text-sm font-normal tracking-normal text-muted-foreground">
+                  INR
+                </span>
+              </CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="flex flex-1">
+            <ChartContainer
+              config={{
+                revenue: {
+                  label: "Revenue",
+                  color: "hsl(var(--chart-1))",
+                },
+              }}
+              className="w-full"
+            >
+              <LineChart
+                accessibilityLayer
+                margin={{
+                  left: 0,
+                  right: 0,
+                  top: 10,
+                  bottom: 0,
+                }}
+                data={revenueData}
+              >
+                <CartesianGrid
+                  strokeDasharray="4 4"
+                  vertical={false}
+                  stroke="hsl(var(--muted-foreground))"
+                  strokeOpacity={0.5}
+                />
+                <YAxis hide domain={["dataMin - 100", "dataMax + 100"]} />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  tickFormatter={(value) => {
+                    return new Date(value).toLocaleDateString("en-US", {
+                      weekday: "short",
+                    });
+                  }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="var(--color-revenue)"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      indicator="line"
+                      labelFormatter={(value) => {
+                        return new Date(value).toLocaleDateString("en-US", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        });
+                      }}
+                    />
+                  }
+                />
+              </LineChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </div>
+    </main>
+  );
 }

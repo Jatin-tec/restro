@@ -34,10 +34,19 @@ import {
   PaginationContent,
   PaginationItem,
 } from "@/components/ui/pagination";
+
+import {
+  Timeline,
+  TimelineContent,
+  TimelineDot,
+  TimelineHeading,
+  TimelineItem,
+  TimelineLine,
+} from "@/components/ui/timeline";
+
 import { Separator } from "@/components/ui/separator";
 import { Header } from "@/components/ui/dashboard/header";
 import { Sidebar } from "@/components/ui/dashboard/sidebar";
-import { Timeline } from "@/components/ui/timeline";
 
 export default function Dashboard({ params }) {
   const timelineItems01 = [
@@ -220,10 +229,7 @@ export default function Dashboard({ params }) {
         <div className="flex flex-col col-span-2 gap-4 h-full">
           <Card className="flex gap-2 p-4">
             <Avatar>
-              <AvatarImage
-                src="https://github.com/shadcn.png"
-                alt="@shadcn"
-              />
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
               <AvatarFallback>HA</AvatarFallback>
             </Avatar>
             <div className="flex flex-col gap-1">
@@ -240,7 +246,21 @@ export default function Dashboard({ params }) {
               Status History
             </CardHeader>
             <CardContent className="">
-              <Timeline items={timelineItems01} />
+              <Timeline>
+                <TimelineItem status="done">
+                  <TimelineHeading side="right">Plan!</TimelineHeading>
+                  <TimelineDot status="done" />
+                  <TimelineLine done />
+                  <TimelineContent>
+                    Before diving into coding, it is crucial to plan your
+                    software project thoroughly.
+                  </TimelineContent>
+                </TimelineItem>
+                <TimelineItem>
+                  <TimelineHeading>Done!</TimelineHeading>
+                  <TimelineDot />
+                </TimelineItem>
+              </Timeline>
             </CardContent>
           </Card>
         </div>

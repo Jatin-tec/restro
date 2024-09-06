@@ -9,6 +9,8 @@ import {
 import { TabsContent } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { EllipsisVertical, SquareDot, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AddCategory } from "./page";
 
 // Recursive component to render categories, subcategories, and menu items
 function CategoryComponent({ category }) {
@@ -66,7 +68,9 @@ function MenuItemComponent({ item }) {
 
 export function MenuAccordion({ categories }) {
   return (
-    <TabsContent value="items" className="p-4">
+    <TabsContent value="items" className="relative">
+      <AddCategory />
+      <Button className="ml-2">Add Item</Button>
       {categories &&
         categories.map((category) => (
           <CategoryComponent key={category.name} category={category} />

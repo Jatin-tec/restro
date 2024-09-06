@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -15,65 +15,47 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import * as React from "react";
-import { Clock, LocateFixed } from "lucide-react";
-import { TimePickerInput } from "@/components/ui/time-picker";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+import {
+  CloudUpload,
+  Edit,
+  HandPlatter,
+  Images,
+  LocateFixed,
+  Plus,
+  ShoppingBag,
+  Truck,
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-
-export function TimePickerPage({ date, setDate }) {
-  const minuteRef = React.useRef(null);
-  const hourRef = React.useRef(null);
-
-  return (
-    <div className="flex items-end gap-2">
-      <div className="grid gap-1 text-center">
-        <Label htmlFor="hours" className="text-xs">
-          Hours
-        </Label>
-        <TimePickerInput
-          picker="hours"
-          date={date}
-          setDate={setDate}
-          ref={hourRef}
-          onRightFocus={() => minuteRef.current?.focus()}
-        />
-      </div>
-      <div className="grid gap-1 text-center">
-        <Label htmlFor="minutes" className="text-xs">
-          Minutes
-        </Label>
-        <TimePickerInput
-          picker="minutes"
-          date={date}
-          setDate={setDate}
-          ref={minuteRef}
-          onLeftFocus={() => hourRef.current?.focus()}
-          onRightFocus={() => secondRef.current?.focus()}
-        />
-      </div>
-
-      <div className="flex h-10 items-center">
-        <Clock className="ml-2 h-4 w-4" />
-      </div>
-    </div>
-  );
-}
+import { TimePickerDemo } from "./timeSelect";
 
 export default function Manage() {
+  const [date, setDate] = React.useState(new Date());
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">Manage Restaurant</h1>
       </div>
-      <Tabs defaultValue="account" className="w-full">
+      <Tabs defaultValue="info" className="w-full">
         <TabsList>
-          <TabsTrigger value="account">Restaurant Management</TabsTrigger>
-          <TabsTrigger value="hour">Working Hours</TabsTrigger>
-          <TabsTrigger value="location">Location</TabsTrigger>
+          <TabsTrigger value="info">Restaurant Management</TabsTrigger>
+          <TabsTrigger value="hour">Images</TabsTrigger>
+          <TabsTrigger value="documents">Documnets</TabsTrigger>
+          <TabsTrigger value="location">Payments</TabsTrigger>
         </TabsList>
-        <TabsContent value="account">
+        <TabsContent value="info">
           <Card className="p-8">
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-3">
               <div className="grid md:col-span-1 w-full max-w-sm items-center gap-3">
                 <p className="font-bold mb-2">Restaurant Details</p>
                 <Label htmlFor="name">Restaurant Name</Label>
@@ -98,60 +80,50 @@ export default function Manage() {
                 <Label htmlFor="email">Phone</Label>
                 <Input type="phone" id="email" placeholder="+91-8877665522" />
 
-                <Label>Select Services</Label>
-
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="pickup" />
-                  <label
-                    htmlFor="pickup"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Pickup
-                  </label>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="dinein" />
-                  <label
-                    htmlFor="dinein"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Dine In
-                  </label>
-                </div>
-
-                <Label htmlFor="dropzone-file">Restaurant Logo</Label>
-                <div class="flex items-center justify-center">
-                  <label
-                    for="dropzone-file"
-                    class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                  >
-                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg
-                        class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 20 16"
+                <div className="mt-4">
+                  <h2 className="flex items-center font-semibold text-base mb-1">
+                    Service Type
+                  </h2>
+                  <Card className="flex gap-2 p-4">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="dineIn" />
+                      <label
+                        htmlFor="dineIn"
+                        className=" flex gap-2 items-center leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
-                        <path
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                        />
-                      </svg>
-                      <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span class="font-semibold">Click to upload</span> or
-                        drag and drop
-                      </p>
-                      <p class="text-xs text-gray-500 dark:text-gray-400">
-                        SVG, PNG, JPG or GIF (MAX. 800x400px)
-                      </p>
+                        <HandPlatter /> DineIn
+                      </label>
                     </div>
-                    <input id="dropzone-file" type="file" class="hidden" />
-                  </label>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="takeaway" />
+                      <label
+                        htmlFor="takeaway"
+                        className=" flex gap-2 items-center leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        <ShoppingBag /> Takeaway
+                      </label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox />
+                      <label
+                        htmlFor="delivery"
+                        className=" flex gap-2 items-center leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        <Truck /> Delivery
+                      </label>
+                    </div>
+                  </Card>
+                </div>
+
+                <div className="relative">
+                  <Label htmlFor="dropzone-file">Location</Label>
+                  <iframe
+                    className="w-full h-52 border-0 rounded-xl"
+                    src="https://www.google.com/maps/embed/v1/place?q=hotel+taj+mumbai&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"
+                  />
+                  <Button className="absolute top-4 right-2 mt-4">
+                    <LocateFixed className="w-4 h-4 mr-2" /> Select Location
+                  </Button>
                 </div>
               </div>
 
@@ -194,59 +166,255 @@ export default function Manage() {
                   placeholder="+91-8877665522"
                 />
               </div>
+
+              <div className="flex flex-col col-span-1">
+                <p className="font-bold mb-2">Operational Timings</p>
+                <div className="w-fit border rounded-lg p-4">
+                  <OutletTimings />
+                </div>
+              </div>
             </div>
           </Card>
         </TabsContent>
+        <TabsContent value="documents">
+          <Card className="p-8">
+            <OutletDocuments />
+          </Card>
+        </TabsContent>
         <TabsContent value="hour">
-          <Card className="p-8 gap-4 grid">
-            <div className="flex justify-evenly font-bold">
-              <p>Day</p>
-              <p>Opening Time</p>
-              <p>Closing Time</p>
-            </div>
-            <Separator className="my-4" />
-            <div className="flex justify-evenly">
-              <div className="flex items-center space-x-2">
-                <Checkbox id="monday" />
-                <label
-                  htmlFor="monday"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Monday
-                </label>
-              </div>
-              <TimePickerPage />
-              <TimePickerPage />
-            </div>
-            <div className="flex justify-evenly">
-              <div className="flex items-center space-x-2">
-                <Checkbox id="tuesday" />
-                <label
-                  htmlFor="tuesday"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Tuesday
-                </label>
-              </div>
-              <TimePickerPage />
-              <TimePickerPage />
-            </div>
+          <Card className="p-8">
+            <Image />
           </Card>
         </TabsContent>
         <TabsContent value="location">
           <Card className="p-8">
-            <iframe
-              frameBorder="0"
-              className="w-full h-96 border-0 rounded-xl"
-              src="https://www.google.com/maps/embed/v1/place?q=hotel+taj+mumbai&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"
-            ></iframe>
-
-            <Button className="mt-4">
-              <LocateFixed className="w-4 h-4 mr-2" /> Select Location
-            </Button>
+            <PaymentSettings />
           </Card>
         </TabsContent>
       </Tabs>
     </main>
+  );
+}
+
+export function OutletTimings() {
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  const initialDate = new Date(); // Initialize with current time
+
+  const [dates, setDates] = React.useState(
+    daysOfWeek.map(() => ({
+      opening: new Date(initialDate),
+      closing: new Date(initialDate),
+    })),
+  );
+
+  const handleDateChange = (dayIndex, type, newDate) => {
+    const updatedDates = [...dates];
+    updatedDates[dayIndex][type] = newDate;
+    setDates(updatedDates);
+  };
+
+  return (
+    <Table>
+      <TableCaption>
+        Your outlet will be automatically marked online in these timings.
+      </TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Day</TableHead>
+          <TableHead>Opening</TableHead>
+          <TableHead></TableHead>
+          <TableHead>Closing</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {dates.map((dayData, index) => (
+          <TableRow key={index}>
+            <TableCell className="font-medium">
+              <div className="flex items-center space-x-2">
+                <Checkbox id={`day${index}`} />
+                <label
+                  htmlFor={`day${index}`}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {daysOfWeek[index]}
+                </label>
+              </div>
+            </TableCell>
+            <TableCell>
+              <TimePickerDemo
+                id={`opening-${index}`}
+                date={dayData.opening}
+                setDate={(newDate) =>
+                  handleDateChange(index, "opening", newDate)
+                }
+              />
+            </TableCell>
+            <TableCell>-</TableCell>
+            <TableCell>
+              <TimePickerDemo
+                id={`closing-${index}`}
+                date={dayData.closing}
+                setDate={(newDate) =>
+                  handleDateChange(index, "closing", newDate)
+                }
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
+
+export function Image({ n = 4 }) {
+  return (
+    <div className="flex flex-col w-full gap-3">
+      <p className="font-bold mb-2">Outlet Images</p>
+      <Label htmlFor="dropzone-file">Logo</Label>
+      <div class="flex items-center">
+        <label
+          for="dropzone-file"
+          class="flex flex-col items-center justify-center aspect-square h-40 border-2 border-gray-300 border-dashed rounded-full cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+        >
+          <div class="flex flex-col items-center justify-center pt-5 pb-6">
+            <CloudUpload class="text-gray-500 dark:text-gray-400" size={32} />
+            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+              <span class="font-semibold">Upload your logo</span>
+              <br /> or drag and drop
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              (MAX. 400x400px)
+            </p>
+          </div>
+          <input id="dropzone-file" type="file" class="hidden" />
+        </label>
+      </div>
+      <Label htmlFor="dropzone-file">Restaurant Images</Label>
+      <div className="grid grid-cols-4 w-full gap-3">
+        {Array.from({ length: n }).map((_, index) => (
+          <label
+            key={index}
+            for="dropzone-file"
+            class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+          >
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+              <CloudUpload class="text-gray-500 dark:text-gray-400" size={32} />
+              <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                <span class="font-semibold">Click to upload</span> or drag and
+                drop
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                SVG, PNG, JPG or GIF (MAX. 800x400px)
+              </p>
+            </div>
+            <input id="dropzone-file" type="file" class="hidden" />
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function PaymentSettings() {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <p className="font-bold mb-2">Restaurant Details</p>
+        <Button className="text-sm">
+          <Edit className="w-4 h-4 mr-2" /> Edit Account Details
+        </Button>
+      </div>
+
+      <Label htmlFor="name">Account Number</Label>
+      <Input type="text" id="name" placeholder="Account Number" />
+
+      <Label htmlFor="name">Re-enter Account Number</Label>
+      <Input type="text" id="name" placeholder="Account Number" />
+
+      <Label htmlFor="name">Account Holder Name</Label>
+      <Input type="text" id="name" placeholder="Name" />
+
+      <Label htmlFor="name">IFSC Code</Label>
+      <Input type="text" id="name" placeholder="IFSC Code" />
+
+      <Label htmlFor="name">Bank Name</Label>
+      <Input type="text" id="name" placeholder="Bank Name" />
+
+      <Label htmlFor="name">Branch Name</Label>
+      <Input type="text" id="name" placeholder="Branch Name" />
+
+      <Label htmlFor="name">Branch Address</Label>
+      <Input type="text" id="name" placeholder="Branch Address" />
+
+      <Label htmlFor="name">Upload Passbook or Cancelled Cheque</Label>
+      <label
+        for="dropzone-file"
+        class="flex flex-col items-center justify-center aspect-video w-80 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+      >
+        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+          <CloudUpload class="text-gray-500 dark:text-gray-400" size={32} />
+          <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+            <span class="font-semibold">Click to upload</span> or drag and drop
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            SVG, PNG, JPG or GIF (MAX. 800x400px)
+          </p>
+        </div>
+        <input id="dropzone-file" type="file" class="hidden" />
+      </label>
+    </div>
+  );
+}
+
+export function OutletDocuments() {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <p className="font-bold mb-2">Outlet Documentation</p>
+        <Button className="text-sm">
+          <Edit className="w-4 h-4 mr-2" /> Edit
+        </Button>
+      </div>
+
+      <Label htmlFor="name">Business PAN</Label>
+      <Input type="text" id="name" placeholder="PAN" />
+
+      <Label htmlFor="name">Name on PAN</Label>
+      <Input type="text" id="name" placeholder="Name" />
+
+      <Label htmlFor="name">FSSAI License Number</Label>
+      <Input type="text" id="name" placeholder="License Number" />
+
+      <Label htmlFor="name">Renewal/Expiry Date</Label>
+      <Input type="text" id="name" placeholder="IFSC Code" />
+
+      <Label htmlFor="name">Upload FSSAI Certificate</Label>
+      <label
+        for="dropzone-file"
+        class="flex flex-col items-center justify-center aspect-video w-80 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+      >
+        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+          <CloudUpload class="text-gray-500 dark:text-gray-400" size={32} />
+          <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+            <span class="font-semibold">Click to upload</span> or drag and drop
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            SVG, PNG, JPG or GIF (MAX. 800x400px)
+          </p>
+        </div>
+        <input id="dropzone-file" type="file" class="hidden" />
+      </label>
+
+      <Label htmlFor="name">GST Number</Label>
+      <Input type="text" id="name" placeholder="Bank Name" />
+    </div>
   );
 }

@@ -104,7 +104,7 @@ export function Header() {
             </Link>
           </nav>
           <div className="mt-auto">
-            <Card>
+            <Card className="hidden">
               <CardHeader>
                 <CardTitle>Upgrade to Pro</CardTitle>
                 <CardDescription>
@@ -115,6 +115,20 @@ export function Header() {
               <CardContent>
                 <Button size="sm" className="w-full">
                   Upgrade
+                </Button>
+              </CardContent>
+            </Card>
+            <Card className="bg-yellow-200 border-2 shadow-yellow-200">
+              <CardHeader>
+                <CardTitle>Pro Plan</CardTitle>
+                <CardDescription>
+                  Unlocked all features and unlimited access to our support
+                  team.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button size="sm" className="w-full">
+                  More
                 </Button>
               </CardContent>
             </Card>
@@ -133,22 +147,44 @@ export function Header() {
           </div>
         </form>
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon" className="rounded-full">
-            <CircleUser className="h-5 w-5" />
-            <span className="sr-only">Toggle user menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Logout</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+
+      <div className="flex items-center gap-4 rounded-lg p-1 bg-accent">
+        <div className="w-10 h-10 aspect-square">
+          <img
+            src="https://content.jdmagicbox.com/comp/indore/d3/0731px731.x731.150724143308.n7d3/catalogue/mahal-restaurant-indore-city-indore-north-indian-restaurants-0rocnxqfcp.jpg"
+            alt="Restaurant"
+            height="100"
+            width="100"
+            className="w-full h-full object-cover rounded-lg"
+          />
+        </div>
+
+        <div className="text-muted-foreground text-xs">
+          <div className="text-sm text-primary font-semibold">Sagar Gaire</div>
+          Chhindwara
+        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="secondary"
+              size="icon"
+              className="rounded-full hover:shadow-md"
+            >
+              <CircleUser className="h-5 w-5" />
+              <span className="sr-only">Toggle user menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>Support</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Logout</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   );
 }

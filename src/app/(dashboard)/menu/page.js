@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MenuAccordion } from "./MenuAccordion";
 import { AddonsAccordion } from "./AddonsAccordion";
 import { EditForm } from "./EditForm";
@@ -14,6 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { logout } from "@/auth/lib";
+import { Badge } from "@/components/ui/badge";
+import Gallery from "./gallery";
 
 async function Menu() {
   const [items, status] = await apiGet("/api/shop/menu");
@@ -42,22 +44,47 @@ async function Menu() {
       <MenuProvider>
         <section className="grid grid-cols-2 h-full">
           <div className="col-span-1 p-6 overflow-y-scroll">
-            <div className="flex items-center mb-4">
-              <h1 className="text-lg font-semibold md:text-2xl">Menu</h1>
+            <Tabs defaultValue="items">
+              <div className="flex items-center justify-between mb-4">
+                <h1 className="text-lg font-semibold md:text-2xl">Menu</h1>
 
-              <AddItem />
-              <Button className="ml-2">Add Item</Button>
-            </div>
-            <div className="col-span-1">
-              <Tabs defaultValue="items">
-                <TabsList>
-                  <TabsTrigger value="items">Items</TabsTrigger>
-                  <TabsTrigger value="addons">Add-ons</TabsTrigger>
+                <TabsList className="relative">
+                  <TabsTrigger value="items">
+                    Items
+                    <Badge className="ml-1 flex bg-muted-foreground shrink-0 items-center justify-center rounded-full">
+                      32
+                    </Badge>
+                  </TabsTrigger>
+                  <TabsTrigger value="addons">
+                    Add-ons
+                    <Badge className="ml-1 flex bg-muted-foreground shrink-0 items-center justify-center rounded-full">
+                      4
+                    </Badge>
+                  </TabsTrigger>
+                  <TabsTrigger value="combo">
+                    Combos
+                    <Badge className="ml-1 flex bg-muted-foreground shrink-0 items-center justify-center rounded-full">
+                      0
+                    </Badge>
+                  </TabsTrigger>
+                  <TabsTrigger value="gallery">
+                    Gallery
+                    <Badge className="ml-1 flex bg-muted-foreground shrink-0 items-center justify-center rounded-full">
+                      76
+                    </Badge>
+                  </TabsTrigger>
                 </TabsList>
-                <MenuAccordion categories={items} />
-                <AddonsAccordion categories={addonsData} />
-              </Tabs>
-            </div>
+              </div>
+              <MenuAccordion categories={items} />
+              <AddonsAccordion categories={addonsData} />
+              <TabsContent value="combo">
+                <AddCategory />
+                <Button className="ml-2">Add Combo</Button>
+              </TabsContent>
+              <TabsContent value="gallery">
+                <Gallery />
+              </TabsContent>
+            </Tabs>
           </div>
           <EditForm />
         </section>
@@ -66,7 +93,7 @@ async function Menu() {
   );
 }
 
-function AddItem() {
+export function AddCategory() {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -75,19 +102,13 @@ function AddItem() {
       <PopoverContent className="w-80 mr-[6.5vh]">
         <div className="grid gap-4">
           <div className="space-y-2">
-            <h4 className="font-medium leading-none">Add Area</h4>
-            <p className="text-sm text-muted-foreground">
-              Areas where tables are placed.
-            </p>
+            <h4 className="font-medium leading-none">Add new category</h4>
+            <p className="text-sm text-muted-foreground">Parent Category </p>
           </div>
 
           <div>
             <Label htmlFor="width">Name</Label>
-            <Input
-              id="width"
-              placeholder="Area name"
-              className="col-span-2 h-8"
-            />
+            <Input id="width" placeholder="Name" className="col-span-2 h-8" />
           </div>
           <Button>Save</Button>
         </div>

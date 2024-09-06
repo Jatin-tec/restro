@@ -39,7 +39,7 @@ export default function Offers() {
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">Offers</h1>
       </div>
-      <div className="grid grid-cols-4 w-full">
+      <div className="grid grid-cols-4 w-full gap-4">
         <Card>
           <CardHeader>
             <CardTitle className="border-2 border-gray-300 rounded-lg border-dashed p-1 pr-3 w-fit">

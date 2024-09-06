@@ -72,8 +72,7 @@ const TimePickerInput = React.forwardRef(
         const newValue = getArrowByType(calculatedValue, step, picker);
         if (flag) setFlag(false);
         const tempDate = new Date(date);
-        const updatedDate = setDateByType(tempDate, newValue, picker, period);
-        setDate(updatedDate);
+        setDate(setDateByType(tempDate, newValue, picker, period));
       }
       if (e.key >= "0" && e.key <= "9") {
         if (picker === "12hours") setPrevIntKey(e.key);
@@ -82,8 +81,7 @@ const TimePickerInput = React.forwardRef(
         if (flag) onRightFocus?.();
         setFlag((prev) => !prev);
         const tempDate = new Date(date);
-        const updatedDate = setDateByType(tempDate, newValue, picker, period);
-        setDate(updatedDate);
+        setDate(setDateByType(tempDate, newValue, picker, period));
       }
     };
 

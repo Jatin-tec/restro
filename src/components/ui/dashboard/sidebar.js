@@ -4,11 +4,13 @@ import { usePathname } from "next/navigation";
 import {
   BadgePercent,
   Bell,
+  Briefcase,
   ChefHat,
   Grid2X2,
   Home,
   LineChart,
   QrCode,
+  Ratio,
   Salad,
   ShoppingCart,
   Store,
@@ -43,12 +45,12 @@ export function Sidebar() {
       icon: ShoppingCart,
       badgeCount: 2,
     },
-    { href: "/orders/all", label: "Orders", icon: ShoppingCart, badgeCount: 6 },
+    { href: "/orders/all", label: "Orders", icon: ShoppingCart },
     { href: "/menu", label: "Menu", icon: Salad },
-    { href: "/table", label: "Tables", icon: Grid2X2 },
+    { href: "/table", label: "Tables", icon: Ratio },
     { href: "/offers", label: "Offers", icon: BadgePercent },
     { href: "/restaurant", label: "Outlet", icon: Store },
-    { href: "#", label: "QR Codes", icon: QrCode },
+    { href: "/marketing", label: "Marketing", icon: Briefcase },
     { href: "#", label: "Customers", icon: Users },
     { href: "#", label: "Finance", icon: LineChart },
   ];
@@ -89,9 +91,12 @@ export function Sidebar() {
                     </Badge>
                   )}
                   {item.badgeCount && (
-                    <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                      {item.badgeCount}
-                    </Badge>
+                    <div className="ml-auto relative flex h-6 w-6">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75" />
+                      <Badge className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500 relative">
+                        {item.badgeCount}
+                      </Badge>
+                    </div>
                   )}
                 </Link>
               );
@@ -99,7 +104,7 @@ export function Sidebar() {
           </nav>
         </div>
         <div className="mt-auto p-4">
-          <Card x-chunk="dashboard-02-chunk-0">
+          <Card className="hidden" x-chunk="dashboard-02-chunk-0">
             <CardHeader className="p-2 pt-0 md:p-4">
               <CardTitle>Upgrade to Pro</CardTitle>
               <CardDescription>
@@ -110,6 +115,19 @@ export function Sidebar() {
             <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
               <Button size="sm" className="w-full">
                 Upgrade
+              </Button>
+            </CardContent>
+          </Card>
+          <Card className="bg-yellow-100 border-2 border-yellow-700 text-yellow-700">
+            <CardHeader>
+              <CardTitle>Pro Plan</CardTitle>
+              <CardDescription>
+                Unlocked all features and unlimited access to our support team.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button size="sm" className="w-full bg-yellow-700">
+                More
               </Button>
             </CardContent>
           </Card>

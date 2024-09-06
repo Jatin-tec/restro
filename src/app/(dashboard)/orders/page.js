@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { UtensilsCrossed } from "lucide-react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
 
 export default function LiveOrder() {
   const [orders, setOrders] = useState({
@@ -82,9 +83,9 @@ export default function LiveOrder() {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center">
-        <h1 className="text-lg font-semibold md:text-2xl">Orders</h1>
+        <h1 className="text-lg font-semibold md:text-2xl">Live Orders</h1>
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-8">
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
@@ -96,14 +97,15 @@ export default function LiveOrder() {
               strategy={verticalListSortingStrategy}
             >
               <Droppable id={status}>
-                <Card>
-                  <CardHeader className="border-b mb-2">
-                    <CardTitle className="text-lg">
-                      {status === "newOrders"
-                        ? "New Orders"
-                        : status.charAt(0).toUpperCase() + status.slice(1)}
-                    </CardTitle>
-                  </CardHeader>
+                <div className="text-lg font-bold mb-2 flex gap-2 items-center">
+                  {status === "newOrders"
+                    ? "New Orders"
+                    : status.charAt(0).toUpperCase() + status.slice(1)}{" "}
+                  <Badge className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                    6
+                  </Badge>
+                </div>
+                <Card className="bg-muted pt-4 h-full">
                   <CardContent>
                     {orders[status].map((orderId) => (
                       <Draggable key={orderId} id={orderId}>
@@ -123,51 +125,54 @@ export default function LiveOrder() {
 
 function Order({ id }) {
   return (
-    <div className="grid gap-4 p-4 border rounded-lg my-2">
-      <div className="flex items-center justify-between mt-2">
-        <span className="text-sm font-medium text-muted-foreground">
-          Order placed on 23 Mar, 08:23 PM
-          <span className="flex item gap-2 text-lg mt-1">
-            ID: {id}
-            <Badge className="bg-blue-500 text-white">Table - 4 Inside</Badge>
+    <div className="\]order rounded-xl my-2 hover:shadow-md bg-white">
+      <div className="grid gap-4 p-4">
+        <div className="flex items-center justify-between mt-2">
+          <span className="text-sm font-medium text-muted-foreground">
+            Order placed on 23 Mar, 08:23 PM
+            <span className="flex item gap-2 text-lg mt-1">
+              ID: {id}
+              <Badge className="bg-blue-500 text-white">Table - 4 Inside</Badge>
+            </span>
           </span>
-        </span>
-        <div className="flex flex-col items-end text-base font-medium">
-          1st Order by Rahul
-          <div className="flex items-center border bg-muted px-2 rounded-full w-fit mt-2 animate-pulse">
-            <UtensilsCrossed className="w-5 h-5 mr-2" />
-            DineIn
+          <div className="flex flex-col items-end text-base font-medium">
+            1st Order by Rahul
+            <div className="flex items-center border bg-muted px-2 rounded-full w-fit mt-2 animate-pulse">
+              <UtensilsCrossed className="w-5 h-5 mr-2" />
+              DineIn
+            </div>
           </div>
         </div>
-      </div>
-      <Separator />
-      <div className="flex items-center justify-between">
-        <p className="font-medium flex items-center gap-2">
-          <Image src="/veg.svg" alt="Dash" height="16" width="16" />
-          <span className="text-muted-foreground">1 x </span>
-          Chole Bhature
-        </p>
-        <span className="flex items-center text-base font-medium">₹ 120</span>
-      </div>
-      <div className="flex items-center justify-between">
-        <p className="font-medium flex items-center gap-2">
-          <Image src="/veg.svg" alt="Dash" height="16" width="16" />
-          <span className="text-muted-foreground">2 x </span>
-          Masala Dosa
-        </p>
-        <span className="flex items-center text-base font-medium">₹ 200</span>
-      </div>
-      <Separator />
-      <div className="flex items-center justify-between mt-2">
-        <p className="text-base">
-          Total Bill
-          <span className="ml-2 px-2 text-sm font-semibold border border-blue-500 text-blue-500 bg-blue-100 rounded-lg">
-            PAID
-          </span>
-        </p>
+        <Separator />
+        <div className="flex items-center justify-between">
+          <p className="font-medium flex items-center gap-2">
+            <Image src="/veg.svg" alt="Dash" height="16" width="16" />
+            <span className="text-muted-foreground">1 x </span>
+            Chole Bhature
+          </p>
+          <span className="flex items-center text-base font-medium">₹ 120</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <p className="font-medium flex items-center gap-2">
+            <Image src="/veg.svg" alt="Dash" height="16" width="16" />
+            <span className="text-muted-foreground">2 x </span>
+            Masala Dosa
+          </p>
+          <span className="flex items-center text-base font-medium">₹ 200</span>
+        </div>
+        <Separator />
+        <div className="flex items-center justify-between mt-2">
+          <p className="text-base">
+            Total Bill
+            <span className="ml-2 px-2 text-sm font-semibold border border-blue-500 text-blue-500 bg-blue-100 rounded-lg">
+              PAID
+            </span>
+          </p>
 
-        <span className="flex items-center text-base font-medium">₹ 320</span>
+          <span className="flex items-center text-base font-medium">₹ 320</span>
+        </div>
       </div>
+      <Progress className="h-6 rounded-lg rounded-t-none" value={33} />
     </div>
   );
 }

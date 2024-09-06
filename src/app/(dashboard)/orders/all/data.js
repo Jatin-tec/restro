@@ -17,7 +17,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -33,113 +32,114 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { DatePickerWithRange } from "@/components/ui/daterange-picker";
+import { subDays, isWithinInterval } from "date-fns"; // Added isWithinInterval
 
 const data = [
   {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    customerName: "Ken Y.",
-    contactNumber: "123-456-7890",
+    id: "234",
+    customerName: "Rahul",
+    placedOn: new Date("2024-08-31T23:18:00"),
+    tableNumber: "4 - Inside",
+    orderType: "DineIn",
+    amount: 100,
+    status: "Ordered",
   },
   {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
+    id: "235",
     customerName: "Abe G.",
-    contactNumber: "234-567-8901",
+    placedOn: new Date("2024-08-30T12:30:00"),
+    tableNumber: "3 - Inside",
+    orderType: "Takeaway",
+    amount: 150,
+    status: "Preparing",
   },
   {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
+    id: "236",
     customerName: "Monserrat B.",
-    contactNumber: "345-678-9012",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    customerName: "Silas J.",
-    contactNumber: "456-789-0123",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    customerName: "Carmella T.",
-    contactNumber: "567-890-1234",
+    placedOn: new Date("2024-08-29T10:00:00"),
+    tableNumber: "2 - Outside",
+    orderType: "DineIn",
+    amount: 120,
+    status: "Completed",
   },
 ];
 
+import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+
 export const columns = [
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
+    accessorKey: "id",
+    header: "Order ID",
+    cell: ({ row }) => <div>{row.getValue("id")}</div>,
   },
   {
     accessorKey: "customerName",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Customer Name
-        <CaretSortIcon className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => <div className="capitalize">{row.getValue("customerName")}</div>,
+    header: "Customer Name",
+    cell: ({ row }) => <div>{row.getValue("customerName")}</div>,
   },
   {
-    accessorKey: "contactNumber",
-    header: "Contact Number",
-    cell: ({ row }) => <div>{row.getValue("contactNumber")}</div>,
+    accessorKey: "placedOn",
+    header: "Placed On",
+    cell: ({ row }) => {
+      const date = row.getValue("placedOn");
+      return <div>{format(date, "PPpp")}</div>;
+    },
+  },
+  {
+    accessorKey: "tableNumber",
+    header: "Table Number",
+    cell: ({ row }) => <div>{row.getValue("tableNumber")}</div>,
+  },
+  {
+    accessorKey: "orderType",
+    header: "Order Type",
+    cell: ({ row }) => <Badge>{row.getValue("orderType")}</Badge>,
   },
   {
     accessorKey: "amount",
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      // Format the amount as a dollar amount
+      const amount = row.getValue("amount");
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: "USD",
+        currency: "INR",
       }).format(amount);
-
       return <div className="text-right font-medium">{formatted}</div>;
     },
   },
   {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <div className="uppercase bg-green-500 text-white font-bold text-sm px-2 p-1 rounded-xl w-28 text-center">
+        {row.getValue("status")}
+      </div>
+    ),
+  },
+  {
     id: "actions",
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <DotsHorizontalIcon className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem
+            onClick={() => navigator.clipboard.writeText(row.getValue("id"))}
+          >
+            Copy Order ID
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>View Order Details</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    ),
   },
 ];
 
@@ -148,9 +148,18 @@ export function OrderTable() {
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [date, setDate] = React.useState({
+    from: subDays(new Date(), 7),
+    to: new Date(),
+  });
+
+  // Filter data based on the date range
+  const filteredData = data.filter((order) =>
+    isWithinInterval(order.placedOn, { start: date.from, end: date.to }),
+  );
 
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -172,57 +181,30 @@ export function OrderTable() {
     <div className="w-full overflow-x-auto">
       <div className="flex flex-col md:flex-row items-center py-4 space-y-4 md:space-y-0 md:space-x-4">
         <Input
-          placeholder="Filter customer names..."
-          value={table.getColumn("customerName")?.getFilterValue() ?? ""}
+          placeholder="Filter order ID..."
+          value={table.getColumn("id")?.getFilterValue() ?? ""}
           onChange={(event) =>
-            table.getColumn("customerName")?.setFilterValue(event.target.value)
+            table.getColumn("id")?.setFilterValue(event.target.value)
           }
           className="max-w-sm flex-1"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="md:ml-auto">
-              Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DatePickerWithRange date={date} setDate={setDate} />
       </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>

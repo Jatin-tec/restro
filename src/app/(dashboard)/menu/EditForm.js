@@ -33,6 +33,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { GalleryDialog } from "./gallery";
 
 export function EditForm() {
   const { selectedItem, handleSave } = useMenuContext();
@@ -196,6 +197,7 @@ export function EditForm() {
             <ImagePlus className="w-8 h-8 " />
             Upload
           </label>
+          <GalleryDialog />
         </Card>
       </div>
 
