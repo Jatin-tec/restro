@@ -1,5 +1,3 @@
-"use client";
-
 import {
   ChevronLeft,
   ChevronRight,
@@ -8,7 +6,6 @@ import {
   CreditCard,
   Mail,
   MoreVertical,
-  Truck,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -45,33 +42,16 @@ import {
 } from "@/components/ui/timeline";
 
 import { Separator } from "@/components/ui/separator";
-import { Header } from "@/components/ui/dashboard/header";
-import { Sidebar } from "@/components/ui/dashboard/sidebar";
+import { getOrder } from "@/lib/orders/getOrder";
 
-export default function Dashboard({ params }) {
-  const timelineItems01 = [
-    {
-      date: "Tuesday, August 27, 2024 8:28 PM",
-      label: "Order Created",
-      content: "By customer John Doe",
-    },
-    {
-      date: "Tuesday, August 27, 2024 8:28 PM",
-      label: "Order Accepted",
-      content: "By Restaurant Staff",
-    },
-    {
-      date: "Tuesday, August 27, 2024 8:28 PM",
-      label: "Order Completed",
-      content: "By Restaurant Staff",
-    },
-  ];
+export default async function Dashboard({ params }) {
+  const order = await getOrder(params.order_id);
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">
-          Order #{params.order_id} - Tuesday, August 27, 2024 8:28 PM
+          Order #{order.order_id} - {new Date(order.created_at).toDateString()}
         </h1>
       </div>
       <div className="grid grid-cols-5 gap-4 items-center justify-center">
@@ -79,7 +59,7 @@ export default function Dashboard({ params }) {
           <CardHeader className="flex flex-row items-start bg-muted/50">
             <div className="grid gap-0.5">
               <CardTitle className="group flex items-center gap-2 text-lg">
-                Order Oe31b70H
+                Order {order.order_id.split("-")[0]}
                 <Button
                   size="icon"
                   variant="outline"
@@ -89,13 +69,13 @@ export default function Dashboard({ params }) {
                   <span className="sr-only">Copy Order ID</span>
                 </Button>
               </CardTitle>
-              <CardDescription>Date: November 23, 2023</CardDescription>
+              <CardDescription>Date: {new Date(order.created_at).toDateString()}</CardDescription>
             </div>
             <div className="ml-auto flex items-center gap-1">
               <Button size="sm" variant="outline" className="h-8 gap-1">
                 <Clock className="h-3.5 w-3.5" />
                 <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
-                  11:00 Minutes
+                  {Math.floor((new Date(order.created_at).getTime() - new Date(order.updated_at).getTime())/(1000 * 60))} Minutes
                 </span>
               </Button>
               <DropdownMenu>
@@ -118,18 +98,16 @@ export default function Dashboard({ params }) {
             <div className="grid gap-3">
               <div className="font-semibold">Order Details</div>
               <ul className="grid gap-3">
-                <li className="flex items-center justify-between">
-                  <span className="text-muted-foreground">
-                    Glimmer Lamps x <span>2</span>
-                  </span>
-                  <span>$250.00</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span className="text-muted-foreground">
-                    Aqua Filters x <span>1</span>
-                  </span>
-                  <span>$49.00</span>
-                </li>
+                {
+                  order.items.map((item) => (
+                    <li className="flex items-center justify-between">
+                      <span className="text-muted-foreground">
+                        {item.food_item.name} x <span>{item.quantity}</span>
+                      </span>
+                      <span>{item.food_item.price}</span>
+                    </li>
+                  ))
+                }
               </ul>
               <Separator className="my-2" />
               <ul className="grid gap-3">
@@ -233,8 +211,8 @@ export default function Dashboard({ params }) {
               <AvatarFallback>HA</AvatarFallback>
             </Avatar>
             <div className="flex flex-col gap-1">
-              <div className="font-semibold">Himanshu</div>
-              <p className="text-muted-foreground">Restaurant Owner</p>
+              <div className="font-semibold">{ order.user }</div>
+              <p className="text-muted-foreground">Customer</p>
               <Button size="sm" variant="outline">
                 <Mail className="h-4 w-4 mr-2" /> Email
               </Button>
@@ -248,17 +226,20 @@ export default function Dashboard({ params }) {
             <CardContent className="">
               <Timeline>
                 <TimelineItem status="done">
-                  <TimelineHeading side="right">Plan!</TimelineHeading>
+                  <TimelineHeading side="right">Ordered</TimelineHeading>
                   <TimelineDot status="done" />
                   <TimelineLine done />
                   <TimelineContent>
-                    Before diving into coding, it is crucial to plan your
-                    software project thoroughly.
+                    {new Date(order.created_at).toDateString()}
                   </TimelineContent>
                 </TimelineItem>
                 <TimelineItem>
-                  <TimelineHeading>Done!</TimelineHeading>
+                  <TimelineHeading>Served</TimelineHeading> 
                   <TimelineDot />
+                  <TimelineLine />
+                  <TimelineContent>
+                    {new Date(order.updated_at).toDateString()}
+                  </TimelineContent>
                 </TimelineItem>
               </Timeline>
             </CardContent>

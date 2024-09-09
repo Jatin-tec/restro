@@ -87,53 +87,6 @@ export function EditForm() {
 
       <div className="mt-4">
         <h2 className="flex items-center font-semibold text-base mb-1">
-          Service Type <CircleHelp className="ml-2 h-5 w-5" />
-        </h2>
-        <Card className="flex gap-4 p-4">
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="dineIn"
-              checked={formData.serviceType?.includes("Dine In") || false}
-              onChange={() => handleSelectChange("serviceType", "Dine In")}
-            />
-            <label
-              htmlFor="dineIn"
-              className=" flex gap-2 items-center leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              <HandPlatter /> Dine In
-            </label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="takeaway"
-              checked={formData.serviceType?.includes("Takeaway") || false}
-              onChange={() => handleSelectChange("serviceType", "Takeaway")}
-            />
-            <label
-              htmlFor="takeaway"
-              className=" flex gap-2 items-center leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              <ShoppingBag /> Takeaway
-            </label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="delivery"
-              checked={formData.serviceType?.includes("Delivery") || false}
-              onChange={() => handleSelectChange("serviceType", "Delivery")}
-            />
-            <label
-              htmlFor="delivery"
-              className=" flex gap-2 items-center leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              <Truck /> Delivery
-            </label>
-          </div>
-        </Card>
-      </div>
-
-      <div className="mt-4">
-        <h2 className="flex items-center font-semibold text-base mb-1">
           Pricing <CircleHelp className="ml-2 h-5 w-5" />
         </h2>
         <Card className="flex gap-4 p-4">
@@ -226,7 +179,7 @@ export function EditForm() {
           <Card className="col-span-1">
             <CardHeader>Variants</CardHeader>
             <CardContent>
-              {formData.variants?.map((variant) => (
+              {formData.variants && formData.variants.length>0 && formData.variants.map((variant) => (
                 <Badge
                   key={variant.name}
                   className="m-1"

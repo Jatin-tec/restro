@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import { Header } from "@/components/ui/dashboard/header";
 import { Sidebar } from "@/components/ui/dashboard/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
           <div className="flex flex-col">
             <Header />
             {children}
+            <Toaster />
           </div>
         </div>
       </body>
