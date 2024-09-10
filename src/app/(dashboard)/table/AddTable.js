@@ -29,7 +29,7 @@ function SubmitButton() {
     const { pending } = useFormStatus();
 
     return (
-        <Button type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending} className="mt-3">
             Add
         </Button>
     );
@@ -46,7 +46,7 @@ export function AddTable({ areas }) {
                 title: state.message,
             });
         }
-    }, [state]);
+    }, [state, toast]);
 
     return (
         <Popover>

@@ -12,16 +12,14 @@ export async function createArea(prevState, formData) {
         name: formData.get("name"),
     };
 
-    try {
-        const response = await apiPost("/api/shop/area/", data, {
-            headers: {
-                Authorization: `Bearer ${user.tokens.access}`,
-            },
-        });
-        revalidatePath('/table')
-        return { 'message': 'Area created successfully', 'status': 'success' };
-    } catch (error) {
-        console.error("Error creating area:", error);
-        return { 'message': error.message, 'status': error.status };
+    const response = await apiPost("/api/shop/area/", data, {
+        headers: {
+            Authorization: `Bearer ${user.tokens.access}`,
+        },
+    });
+    if (!response) {
+        return { 'message': 'Error Creating Area', 'status': 'destructive' };
     }
+    revalidatePath('/table')
+    return { 'message': 'Area created successfully', 'status': 'success' };
 }

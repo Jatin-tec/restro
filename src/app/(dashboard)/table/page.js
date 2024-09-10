@@ -39,7 +39,7 @@ export function TableList({ tables }) {
                 <TableCell>{name.area}</TableCell>
                 <TableCell className="justify-end flex gap-2">
                   <QrDialog table={name} />        
-                  <DeleteTable tableId={name.id} tableData={name} />
+                  <DeleteTable tableId={name.id} />
                 </TableCell>
               </TableRow>
             ))}

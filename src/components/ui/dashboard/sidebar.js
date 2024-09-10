@@ -92,7 +92,7 @@ export function Sidebar() {
                   )}
                   {item.badgeCount && (
                     <div className="ml-auto relative flex h-6 w-6">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75" />
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75" />
                       <Badge className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500 relative">
                         {item.badgeCount}
                       </Badge>

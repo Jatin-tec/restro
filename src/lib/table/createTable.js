@@ -13,16 +13,14 @@ export async function createTable(prevState, formData) {
         area: formData.get("area"),
     };
 
-    try {
-        const response = await apiPost("/api/shop/tables/", data, {
-            headers: {
-                Authorization: `Bearer ${user.tokens.access}`,
-            },
-        });
-        revalidatePath('/table')
-        return { 'message': 'Table created successfully', 'status': 'success' };
-    } catch (error) {
-        console.error("Error creating table:", error);
-        return { 'message': error.message, 'status': 'destructive' };
+    const response = await apiPost("/api/shop/tables/", data, {
+        headers: {
+            Authorization: `Bearer ${user.tokens.access}`,
+        },
+    });
+    if (!response) {
+        return { 'message': 'Error Creating Table', 'status': 'destructive' };
     }
+    revalidatePath('/table')
+    return { 'message': 'Table created successfully', 'status': 'success' };
 }

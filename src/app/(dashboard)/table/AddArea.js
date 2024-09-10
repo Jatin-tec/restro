@@ -36,12 +36,11 @@ export function AddArea() {
     useEffect(() => {
         if (state.message) {
             toast({
-                variant: "success",
-                action: "Undo",
-                heading: state.message,
+                variant: state.status,
+                title: state.message,
             });
         }
-    }, [state]);
+    }, [state, toast]);
 
 
     return (
