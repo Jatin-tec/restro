@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import InvoiceTemplate from "@/components/ui/bill/printInvoice";
 
 import { Badge } from "@/components/ui/badge";
@@ -7,19 +7,33 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Printer, UtensilsCrossed, VolumeX } from "lucide-react";
 import Image from "next/image";
 
-export function NewOrder() {
+export function NewOrder({ subscriptionURL }) {
+  const [drawerOpen, setDrawer] = useState(false);
+  const [order, setOrder] = useState(null);
+
+  useEffect(() => {
+    const socket = new WebSocket(`ws://localhost:8000${subscriptionURL.url}/`);
+    socket.onopen = () => {
+      console.log('socket connected');
+    };
+    socket.onmessage = (event) => {
+      console.log(event)
+      setDrawer(true);
+      // setOrder()
+    };
+    return () => {
+      socket.close();
+    };
+  }, [subscriptionURL]);
+
   const printRef = useRef();
 
   const handlePrint = () => {
@@ -33,10 +47,7 @@ export function NewOrder() {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
-      </DialogTrigger>
+    <Dialog open={drawerOpen} onOpenChange={setDrawer}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle className="gap-6 flex items-center">

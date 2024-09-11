@@ -163,8 +163,8 @@ export default function OrderTable({ searchParams, data }) {
       <div className="flex flex-col md:flex-row items-center py-4 space-y-4 md:space-y-0 md:space-x-4">
         <Input
           placeholder="Filter order ID..."
-          value={table.getColumn("id")?.getFilterValue() ?? ""}
-          onChange={(event) => table.getColumn("id")?.setFilterValue(event.target.value)}
+          value={table.getColumn("order_id")?.getFilterValue() ?? ""}
+          onChange={(event) => table.getColumn("order_id")?.setFilterValue(event.target.value)}
           className="max-w-sm flex-1"
         />
         <DatePickerWithRange
@@ -175,10 +175,10 @@ export default function OrderTable({ searchParams, data }) {
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+            {table.getHeaderGroups().map((headerGroup, key) => (
+              <TableRow key={key}>
+                {headerGroup.headers.map((header, header_key) => (
+                  <TableHead key={header_key}>
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
@@ -187,10 +187,10 @@ export default function OrderTable({ searchParams, data }) {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} onClick={() => handleClick(row)}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+              table.getRowModel().rows.map((row, key) => (
+                <TableRow key={key} data-state={row.getIsSelected() && "selected"} onClick={() => handleClick(row)}>
+                  {row.getVisibleCells().map((cell, row_key) => (
+                    <TableCell key={row_key}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
                 </TableRow>
               ))
