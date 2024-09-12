@@ -17,7 +17,7 @@ import {
   TvMinimal,
   Users,
 } from "lucide-react";
-
+import { useOrderContext } from "@/context/OrderContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,7 +30,8 @@ import {
 
 export function Sidebar() {
   const pathname = usePathname();
-
+  const { liveOrder } = useOrderContext();
+  
   const navItems = [
     { href: "/", label: "Dashboard", icon: Home },
     {
@@ -43,7 +44,7 @@ export function Sidebar() {
       href: "/orders",
       label: "Live Orders",
       icon: ShoppingCart,
-      badgeCount: 2,
+      badgeCount: liveOrder.newOrders.length,
     },
     { href: "/orders/all", label: "Orders", icon: ShoppingCart },
     { href: "/menu", label: "Menu", icon: Salad },
@@ -92,7 +93,7 @@ export function Sidebar() {
                   )}
                   {item.badgeCount && (
                     <div className="ml-auto relative flex h-6 w-6">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75" />
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75" />
                       <Badge className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500 relative">
                         {item.badgeCount}
                       </Badge>

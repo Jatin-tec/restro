@@ -10,40 +10,41 @@ import { TabsContent } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { EllipsisVertical, SquareDot, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AddCategory } from "./page";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
-// Recursive component to render categories, subcategories, and menu items
-function CategoryComponent({ category }) {
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+export function AddCategory() {
   return (
-    <Accordion type="single" collapsible value={category.name}>
-      <AccordionItem value={category.name}>
-        <AccordionTrigger>
-          <div className="flex gap-8">{category.name}</div>
-        </AccordionTrigger>
-        <AccordionContent>
-          {/* Check if sub_categories exists and has items */}
-          {Array.isArray(category.sub_categories) &&
-          category.sub_categories.length > 0
-            ? // If subcategories exist, recursively render them
-              category.sub_categories.map((subCategory) => (
-                <CategoryComponent
-                  key={subCategory.name}
-                  category={subCategory}
-                />
-              ))
-            : // If no subcategories, render the menu items
-              category.food_items.map((item) => (
-                <MenuItemComponent key={item.name} item={item} />
-              ))}
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button className="ml-auto">Add Category</Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 mr-[6.5vh]">
+        <div className="grid gap-4">
+          <div className="space-y-2">
+            <h4 className="font-medium leading-none">Add new category</h4>
+            <p className="text-sm text-muted-foreground">Parent Category </p>
+          </div>
+
+          <div>
+            <Label htmlFor="width">Name</Label>
+            <Input id="width" placeholder="Name" className="col-span-2 h-8" />
+          </div>
+          <Button>Save</Button>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 
 function MenuItemComponent({ item }) {
-  const { toggleItemStockStatus, toggleItemFeaturedStatus, handleItemClick } =
-    useMenuContext();
+  const { toggleItemStockStatus, toggleItemFeaturedStatus, handleItemClick } = useMenuContext();
   return (
     <div
       className="grid grid-cols-4 w-full hover:shadow-sm p-4 border-b"
@@ -66,7 +67,37 @@ function MenuItemComponent({ item }) {
   );
 }
 
+// Recursive component to render categories, subcategories, and menu items
+function CategoryComponent({ category }) {
+  return (
+    <Accordion type="single" collapsible value={category.name}>
+      <AccordionItem value={category.name}>
+        <AccordionTrigger>
+          <div className="flex gap-8">{category.name}</div>
+        </AccordionTrigger>
+        <AccordionContent>
+          {/* Check if sub_categories exists and has items */}
+          {Array.isArray(category.sub_categories) &&
+            category.sub_categories.length > 0
+            ? // If subcategories exist, recursively render them
+            category.sub_categories.map((subCategory) => (
+              <CategoryComponent
+                key={subCategory.name}
+                category={subCategory}
+              />
+            ))
+            : // If no subcategories, render the menu items
+            category.food_items.map((item) => (
+              <MenuItemComponent key={item.name} item={item} />
+            ))}
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  );
+}
+
 export function MenuAccordion({ categories }) {
+  console.log("MenuAccordion rendered");
   return (
     <TabsContent value="items" className="relative">
       <AddCategory />

@@ -1,24 +1,28 @@
+"use server";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MenuAccordion } from "./MenuAccordion";
-import { AddonsAccordion } from "./AddonsAccordion";
+import { AddonsAccordion, AddCategory } from "./AddonsAccordion";
 import { EditForm } from "./EditForm";
 import { apiGet } from "@/handlers/apiHandler";
 import { MenuProvider } from "@/context/MenuContext";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { logout } from "@/auth/lib";
 import { Badge } from "@/components/ui/badge";
 import Gallery from "./gallery";
+import { cookies } from "next/headers";
+import { getSession } from "@/auth/lib";
 
-async function Menu() {
-  const [items, status] = await apiGet("/api/shop/menu");
+export default async function Menu() {
+  const cookieStore = cookies();
+  const session = cookieStore.get("session")?.value;
+  const user = await getSession(session);
+
+  const items = await apiGet("/api/shop/menu", {
+    headers: {
+      Authorization: `Bearer ${user.tokens.access}`,
+    },
+  });
+  console.log(items, 'items');
+
   const addonsData = [
     {
       name: "Condiments",
@@ -40,14 +44,13 @@ async function Menu() {
   ];
 
   return (
-    <main className="flex flex-1 flex-col gap-4 lg:gap-6 max-h-screen">
-      <MenuProvider>
+    <MenuProvider>
+      <main className="flex flex-1 flex-col gap-4 lg:gap-6 max-h-screen">
         <section className="grid grid-cols-2 h-full">
           <div className="col-span-1 p-6 overflow-y-scroll">
             <Tabs defaultValue="items">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-lg font-semibold md:text-2xl">Menu</h1>
-
                 <TabsList className="relative">
                   <TabsTrigger value="items">
                     Items
@@ -88,33 +91,7 @@ async function Menu() {
           </div>
           <EditForm />
         </section>
-      </MenuProvider>
-    </main>
+      </main>
+    </MenuProvider>
   );
 }
-
-export function AddCategory() {
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button className="ml-auto">Add Category</Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80 mr-[6.5vh]">
-        <div className="grid gap-4">
-          <div className="space-y-2">
-            <h4 className="font-medium leading-none">Add new category</h4>
-            <p className="text-sm text-muted-foreground">Parent Category </p>
-          </div>
-
-          <div>
-            <Label htmlFor="width">Name</Label>
-            <Input id="width" placeholder="Name" className="col-span-2 h-8" />
-          </div>
-          <Button>Save</Button>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-export default Menu;

@@ -1,5 +1,3 @@
-import { Header } from "@/components/ui/dashboard/header";
-import { Sidebar } from "@/components/ui/dashboard/sidebar";
 import { LoaderCircle } from "lucide-react";
 
 export default function Loading() {
