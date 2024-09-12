@@ -1,3 +1,4 @@
+"use server"
 import { getSession } from "@/auth/lib";
 import { apiGet } from "@/handlers/apiHandler";
 import { notFound } from "next/navigation";

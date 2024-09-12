@@ -1,49 +1,62 @@
 "use client";
-import { useState } from "react";
-import {
-  arrayMove,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { UtensilsCrossed } from "lucide-react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
+import { useOrderContext } from "@/context/OrderContext";
+import { updateOrderStatus, getOrders } from "@/lib/orders/getLiveOrder";
+
+const STATUS = {
+  newOrders: "pending",
+  preparing: "processing",
+  completed: "completed",
+};
 
 export default function LiveOrder() {
-  const [orders, setOrders] = useState({
-    "newOrders": [{orderId: "23"}, {orderId: "24"}],
-    "preparing": [{orderId: "22"}],
-    "completed": [{orderId: "100"}],
-  });
+  const { liveOrder, setOrder } = useOrderContext();
 
-  const onDrop = (event, toStatus) => {
-    const orderId = event.dataTransfer.getData("orderId");
+  const onDrop = async (event, toStatus) => {
+    const orderId = event.dataTransfer.getData("order_id");
     const fromStatus = event.dataTransfer.getData("fromStatus");
-
+    
     if (fromStatus === toStatus) return;
 
-    setOrders((prev) => {
-      const fromItems = prev[fromStatus].filter((existingItem) => existingItem.orderId !== orderId);
-      const toItems = [...prev[toStatus], prev[fromStatus].find((existingItem) => existingItem.orderId === orderId)];
-      console.log(`${prev[fromStatus]},  fromItems: ${fromItems} toItems: ${toItems}`);
-      return {
-        ...prev,
-        [toStatus]: toItems,
-        [fromStatus]: fromItems,
-      };
-    });
+    // Update the order status on the server
+    try {
+      await updateOrderStatus(orderId, STATUS[toStatus]); // Update status via API
+
+      // Update the local state after a successful API response
+      setOrder((prev) => {
+        const fromItems = prev[fromStatus].filter(
+          (existingItem) => existingItem.order_id !== orderId,
+        );
+        const toItems = [
+          ...prev[toStatus],
+          prev[fromStatus].find(
+            (existingItem) => existingItem.order_id === orderId,
+          ),
+        ];
+        return {
+          ...prev,
+          [toStatus]: toItems,
+          [fromStatus]: fromItems,
+        };
+      });
+    } catch (error) {
+      console.error("Error updating order status:", error);
+    }
   };
 
   const onDragOver = (event) => {
     event.preventDefault();
   };
 
-  const onDragStart = (event, order, fromStaus) => {
-    event.dataTransfer.setData("orderId", order.orderId);
-    event.dataTransfer.setData("fromStatus", fromStaus);
+  const onDragStart = (event, order, fromStatus) => {
+    event.dataTransfer.setData("order_id", order.order_id);
+    event.dataTransfer.setData("fromStatus", fromStatus);
   };
 
   return (
@@ -52,61 +65,69 @@ export default function LiveOrder() {
         <h1 className="text-lg font-semibold md:text-2xl">Live Orders</h1>
       </div>
       <div className="grid grid-cols-3 gap-8">
-        {Object.keys(orders).map((status) => (
-          <div 
-            key={status} 
-            className="flex flex-col gap-4" 
+        {Object.keys(liveOrder).map((status) => (
+          <div
+            key={status}
+            className="flex flex-col gap-4"
             onDrop={(event) => onDrop(event, status)}
             onDragOver={onDragOver}
           >
             <div className="text-lg font-bold mb-2 flex gap-2 items-center">
               <span>{status.toUpperCase()}</span>
               <Badge className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                {orders[status].length}
+                {liveOrder[status].length}
               </Badge>
             </div>
             <Card className="bg-muted pt-4 h-full">
               <CardContent>
-                {orders[status].map((order) => (
-                  <div 
-                    className="order rounded-xl my-2 hover:shadow-md bg-white" 
-                    key={order.orderId}
+                {liveOrder[status].map((order) => (
+                  <div
+                    className="order rounded-xl my-2 hover:shadow-md bg-white"
+                    key={order.order_id}
                     onDragStart={(event) => onDragStart(event, order, status)}
-                    draggable>
+                    draggable
+                  >
                     <div className="grid gap-4 p-4">
                       <div className="flex items-center justify-between mt-2">
                         <span className="text-sm font-medium text-muted-foreground">
-                          Order placed on 23 Mar, 08:23 PM
+                          Order placed on{" "}
+                          {new Date(order.created_at).toLocaleString()}
                           <span className="flex item gap-2 text-lg mt-1">
-                            ID: {order.orderId}
-                            <Badge className="bg-blue-500 text-white">Table - 4 Inside</Badge>
+                            ID: {order.order_id.split("-")[0]}
+                            <Badge className="bg-blue-500 text-white">
+                              {order.table}
+                            </Badge>
                           </span>
                         </span>
                         <div className="flex flex-col items-end text-base font-medium">
-                          1st Order by Rahul
+                          Order by {order.user}
                           <div className="flex items-center border bg-muted px-2 rounded-full w-fit mt-2 animate-pulse">
                             <UtensilsCrossed className="w-5 h-5 mr-2" />
-                            DineIn
+                            {order.order_type}
                           </div>
                         </div>
                       </div>
                       <Separator />
-                      <div className="flex items-center justify-between">
-                        <p className="font-medium flex items-center gap-2">
-                          <Image src="/veg.svg" alt="Dash" height="16" width="16" />
-                          <span className="text-muted-foreground">1 x </span>
-                          Chole Bhature
-                        </p>
-                        <span className="flex items-center text-base font-medium">₹ 120</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <p className="font-medium flex items-center gap-2">
-                          <Image src="/veg.svg" alt="Dash" height="16" width="16" />
-                          <span className="text-muted-foreground">2 x </span>
-                          Masala Dosa
-                        </p>
-                        <span className="flex items-center text-base font-medium">₹ 200</span>
-                      </div>
+                      {order.items.map((item, key) => (
+                        <div
+                          className="flex items-center justify-between"
+                          key={key}
+                        >
+                          <p className="font-medium flex items-center gap-2">
+                            <Image
+                              src="/veg.svg"
+                              alt="Dash"
+                              height="16"
+                              width="16"
+                            />
+                            <span className="text-muted-foreground">{item.quantity} x </span>
+                            {item.food_item.name}
+                          </p>
+                          <span className="flex items-center text-base font-medium">
+                            ₹ {item.totalPrice}
+                          </span>
+                        </div>
+                      ))}
                       <Separator />
                       <div className="flex items-center justify-between mt-2">
                         <p className="text-base">
@@ -116,10 +137,15 @@ export default function LiveOrder() {
                           </span>
                         </p>
 
-                        <span className="flex items-center text-base font-medium">₹ 320</span>
+                        <span className="flex items-center text-base font-medium">
+                          ₹ {order.total}
+                        </span>
                       </div>
                     </div>
-                    <Progress className="h-6 rounded-lg rounded-t-none" value={50} />
+                    <Progress
+                      className="h-6 rounded-lg rounded-t-none"
+                      value={50}
+                    />
                   </div>
                 ))}
               </CardContent>
