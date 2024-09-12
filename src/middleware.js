@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import { decrypt } from '@/app/lib/session';
-import { cookies } from 'next/headers';
-import { logout } from './auth/lib';
+import { getSession, logout } from '@/lib/auth/session';
 
 // Define protected and public routes
 const protectedRoutes = ['/', '/customers', '/finance', '/menu', '/build-qr', '/offers', '/orders', '/restaurant', '/tables', '/seller'];
@@ -12,12 +10,8 @@ export default async function middleware(req) {
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
 
-  const cookieStore = cookies()
-  // Get session cookie
-  const cookie = cookieStore.get('session')?.value;
-
-  // Decrypt the session cookie
-  const session = cookie ? await decrypt(cookie) : null;
+  const session = await getSession();
+  console.log('session', session);
 
   // Redirect to /login if user is not authenticated on a protected route
   if (isProtectedRoute && !session?.user) {

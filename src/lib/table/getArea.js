@@ -1,4 +1,4 @@
-import { getSession } from "@/auth/lib";
+import { getSession } from "@/lib/auth/session";
 import { apiGet } from "@/handlers/apiHandler";
 import { notFound } from "next/navigation";
 
