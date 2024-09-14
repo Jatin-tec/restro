@@ -10,32 +10,6 @@ import {
   MultiSelectSearch,
 } from "@/components/ui/multiselect";
 import Image from "next/image";
-
-export function AddonsSelect() {
-  return (
-    <MultiSelect>
-      <MultiSelectTrigger className="w-80">
-        <MultiSelectValue placeholder="Select Frameworks" />
-      </MultiSelectTrigger>
-      <MultiSelectContent>
-        <MultiSelectSearch placeholder="Search Addons" />
-        <MultiSelectList>
-          <MultiSelectItem value="Extra Cheese">
-            <p className="font-medium flex items-center gap-2">
-              <Image src="/veg.svg" alt="Dash" height="14" width="14" />
-              Extra Cheese
-              <span className="text-muted-foreground">- ₹20 </span>
-            </p>
-          </MultiSelectItem>
-          <MultiSelectItem value="vue">Vue</MultiSelectItem>
-          <MultiSelectItem value="angular">Angular</MultiSelectItem>
-          <MultiSelectItem value="svelte">Svelte</MultiSelectItem>
-        </MultiSelectList>
-      </MultiSelectContent>
-    </MultiSelect>
-  );
-}
-
 import {
   Dialog,
   DialogContent,
@@ -79,6 +53,32 @@ const dummyData = {
     { variant: "Blue", price: 60 },
   ],
 };
+
+
+export function AddonsSelect() {
+  return (
+    <MultiSelect>
+      <MultiSelectTrigger className="w-80">
+        <MultiSelectValue placeholder="Select Frameworks" />
+      </MultiSelectTrigger>
+      <MultiSelectContent>
+        <MultiSelectSearch placeholder="Search Addons" />
+        <MultiSelectList>
+          <MultiSelectItem value="Extra Cheese">
+            <p className="font-medium flex items-center gap-2">
+              <Image src="/veg.svg" alt="Dash" height="14" width="14" />
+              Extra Cheese
+              <span className="text-muted-foreground">- ₹20 </span>
+            </p>
+          </MultiSelectItem>
+          <MultiSelectItem value="vue">Vue</MultiSelectItem>
+          <MultiSelectItem value="angular">Angular</MultiSelectItem>
+          <MultiSelectItem value="svelte">Svelte</MultiSelectItem>
+        </MultiSelectList>
+      </MultiSelectContent>
+    </MultiSelect>
+  );
+}
 
 export function VariantsSelect() {
   const [categories, setCategories] = useState(["size", "color"]); // List of categories

@@ -1,47 +1,18 @@
 "use server";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MenuAccordion } from "./MenuAccordion";
-import { AddonsAccordion, AddCategory } from "./AddonsAccordion";
+import { MenuAccordion, AddCategory } from "./MenuAccordion";
+import { AddonsAccordion } from "./AddonsAccordion";
 import { EditForm } from "./EditForm";
-import { apiGet } from "@/handlers/apiHandler";
 import { MenuProvider } from "@/context/MenuContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { getMenu } from "@/lib/menu/getMenu";
+import { getAddons } from "@/lib/menu/getAddons";
 import Gallery from "./gallery";
-import { cookies } from "next/headers";
-import { getSession } from "@/auth/lib";
 
 export default async function Menu() {
-  const cookieStore = cookies();
-  const session = cookieStore.get("session")?.value;
-  const user = await getSession(session);
-
-  const items = await apiGet("/api/shop/menu", {
-    headers: {
-      Authorization: `Bearer ${user.tokens.access}`,
-    },
-  });
-  console.log(items, 'items');
-
-  const addonsData = [
-    {
-      name: "Condiments",
-      addonItems: [
-        {
-          name: "Butter",
-          price: "₹20 +",
-          statusColor: "text-yellow-500",
-          description: "Add a rich buttery taste",
-        },
-        {
-          name: "Dahi",
-          price: "₹30 +",
-          statusColor: "text-green-500",
-          description: "Served chilled",
-        },
-      ],
-    },
-  ];
+  const items = await getMenu();
+  const addons = await getAddons();
 
   return (
     <MenuProvider>
@@ -55,13 +26,13 @@ export default async function Menu() {
                   <TabsTrigger value="items">
                     Items
                     <Badge className="ml-1 flex bg-muted-foreground shrink-0 items-center justify-center rounded-full">
-                      32
+                      {items.length}
                     </Badge>
                   </TabsTrigger>
                   <TabsTrigger value="addons">
                     Add-ons
                     <Badge className="ml-1 flex bg-muted-foreground shrink-0 items-center justify-center rounded-full">
-                      4
+                      {addons.length}
                     </Badge>
                   </TabsTrigger>
                   <TabsTrigger value="combo">
@@ -79,7 +50,7 @@ export default async function Menu() {
                 </TabsList>
               </div>
               <MenuAccordion categories={items} />
-              <AddonsAccordion categories={addonsData} />
+              <AddonsAccordion categories={addons} />
               <TabsContent value="combo">
                 <AddCategory />
                 <Button className="ml-2">Add Combo</Button>
@@ -89,7 +60,7 @@ export default async function Menu() {
               </TabsContent>
             </Tabs>
           </div>
-          <EditForm />
+          <EditForm foodCategory={items} addonCategory={addons} />
         </section>
       </main>
     </MenuProvider>

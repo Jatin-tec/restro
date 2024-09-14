@@ -48,7 +48,7 @@ function MenuItemComponent({ item }) {
   return (
     <div
       className="grid grid-cols-4 w-full hover:shadow-sm p-4 border-b"
-      onClick={() => handleItemClick(item)}
+      onClick={() => handleItemClick(item, "menu")}
     >
       <div className="col-span-2">
         <span className="flex items-center font-bold cursor-pointer">
@@ -97,7 +97,7 @@ function CategoryComponent({ category }) {
 }
 
 export function MenuAccordion({ categories }) {
-  console.log("MenuAccordion rendered");
+  console.log(categories, "food items");
   return (
     <TabsContent value="items" className="relative">
       <AddCategory />

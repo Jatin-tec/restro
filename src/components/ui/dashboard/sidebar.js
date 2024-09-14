@@ -44,7 +44,7 @@ export function Sidebar() {
       href: "/orders",
       label: "Live Orders",
       icon: ShoppingCart,
-      badgeCount: liveOrder.newOrders.length,
+      badgeCount: liveOrder.newOrders.length ? liveOrder.newOrders.length : '',
     },
     { href: "/orders/all", label: "Orders", icon: ShoppingCart },
     { href: "/menu", label: "Menu", icon: Salad },

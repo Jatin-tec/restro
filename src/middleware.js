@@ -11,7 +11,6 @@ export default async function middleware(req) {
   const isPublicRoute = publicRoutes.includes(path);
 
   const session = await getSession();
-  console.log('session', session);
 
   // Redirect to /login if user is not authenticated on a protected route
   if (isProtectedRoute && !session?.user) {

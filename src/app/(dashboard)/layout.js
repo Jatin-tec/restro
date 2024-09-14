@@ -4,7 +4,6 @@ import { Header } from "@/components/ui/dashboard/header";
 import { Sidebar } from "@/components/ui/dashboard/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 import { OrderProvider } from "@/context/OrderContext";
-import { getSubscriptionURL } from "@/lib/orders/subLiveOrder";
 import { NewOrder } from "./newOrder";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -14,7 +13,6 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const subscriptionURL = await getSubscriptionURL();
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -27,7 +25,7 @@ export default async function RootLayout({ children }) {
               <Toaster />
             </div>
           </div>
-          <NewOrder subscriptionURL={subscriptionURL} />
+          <NewOrder />
         </OrderProvider>
         </body>
     </html>
