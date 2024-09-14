@@ -14,26 +14,25 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Printer, UtensilsCrossed, VolumeX } from "lucide-react";
 import Image from "next/image";
+import { useOrderContext } from "@/context/OrderContext";
 
-export function NewOrder({ subscriptionURL }) {
+export function NewOrder() {
   const [drawerOpen, setDrawer] = useState(false);
-  const [order, setOrder] = useState(null);
-
-  // {"message": {"order_id": "3227a332-6e68-46d9-8f41-44f84fd8236d", "user": null, "outlet": 1, "items": [{"id": 5, "food_item": {"id": 3, "name": "Blueberry Pancake", "food_type": "veg", "food_category": "Breakfast", "food_subcategory": "Pancakes", "description": "It's served with syrup", "price": "120.00", "image_url": null, "addons": [], "tags": [], "prepration_time": 30, "status_color": "text-green-500", "rating": 4.5, "variants": null}, "variant": null, "quantity": 3, "addons": [], "totalPrice": 360.0}], "table": "Table-1", "cooking_instructions": "", "order_type": "dine_in", "total": 360.0, "status": "pending", "created_at": "2024-09-12T12:40:13.430811Z", "updated_at": "2024-09-12T12:40:13.430835Z"}}
-
+  const [order, setLiveOrder] = useState(null);
+  const { liveOrder, setOrder, subscriptionURL } = useOrderContext();
+  
   useEffect(() => {
-    const socket = new WebSocket(`ws://localhost:8000${subscriptionURL.url}/`);
+    const socket = new WebSocket(`ws://localhost:8000${subscriptionURL}/`);
+    
     socket.onopen = () => {
       console.log("socket connected");
     };
-
+    
     socket.onmessage = (event) => {
       try {
-        console.log("message received");
         const data = JSON.parse(event.data);
-        console.log(data);
-        setOrder(data.message);
-        console.log("order set");
+        setLiveOrder(data.message);
+        setOrder({ ...liveOrder, newOrders: [...liveOrder.newOrders, data.message] });
         setDrawer(true);
       } catch (error) {
         console.error(error);
@@ -43,7 +42,7 @@ export function NewOrder({ subscriptionURL }) {
     return () => {
       socket.close();
     };
-  }, [subscriptionURL]);
+  }, [subscriptionURL, liveOrder, setOrder]);
 
   const printRef = useRef();
 

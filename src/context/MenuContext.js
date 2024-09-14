@@ -13,10 +13,13 @@ export const MenuProvider = ({ children }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [menuItems, setMenuItems] = useState([]); // To manage all menu items
   const [featuredItems, setFeaturedItems] = useState([]); // To manage featured items
+  const [addonItems, setAddonItems] = useState([]); // Manage addon items
+  const [editType, setEditType] = useState("menu"); // New: To differentiate between item types
 
   // Function to handle item selection
-  const handleItemClick = (item) => {
+  const handleItemClick = (item, type = "menu") => {
     setSelectedItem(item);
+    setEditType(type);
   };
 
   // Function to toggle item in stock status
@@ -38,19 +41,21 @@ export const MenuProvider = ({ children }) => {
   };
 
   // Function to save the edited item details
-  const handleSave = (updatedItem) => {
-    setMenuItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === updatedItem.id ? updatedItem : item
-      )
-    );
-    setSelectedItem(null); // Optionally reset selected item after saving
+  const handleSave = (updatedItem, type="menu") => {
+    console.log(updatedItem, "Updated Item");
+    // setMenuItems((prevItems) =>
+    //   prevItems.map((item) =>
+    //     item.id === updatedItem.id ? updatedItem : item
+    //   )
+    // );
+    // setSelectedItem(null); // Optionally reset selected item after saving
   };
 
   return (
     <MenuContext.Provider
       value={{
         selectedItem,
+        editType,
         handleItemClick,
         toggleItemStockStatus,
         toggleItemFeaturedStatus,

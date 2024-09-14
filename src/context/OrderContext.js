@@ -1,6 +1,6 @@
 "use client";
-// MenuContext.js
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { getSubscriptionURL } from "@/lib/orders/subLiveOrder";
 import { getOrders } from "@/lib/orders/getLiveOrder";
 
 // Create the context
@@ -16,6 +16,12 @@ export const OrderProvider = ({ children }) => {
     preparing: [],
     completed: [],
   });
+  const [subscriptionURL, setUrl] = useState('');
+  
+  const fetchSubscriptionURL = async () => {
+    const subscriptionURL = await getSubscriptionURL();
+    setUrl(subscriptionURL?.url || '');
+  }
   
   const fetchOrders = async () => {
     try {
@@ -30,11 +36,12 @@ export const OrderProvider = ({ children }) => {
   
   useEffect(() => {
     fetchOrders();
+    fetchSubscriptionURL();
     console.log("fetching orders");
   }, []);
   
   return (
-    <OrderContext.Provider value={{ liveOrder, fetchOrders, setOrder }}>
+    <OrderContext.Provider value={{ liveOrder, subscriptionURL, fetchOrders, setOrder }}>
       {children}
     </OrderContext.Provider>
   );

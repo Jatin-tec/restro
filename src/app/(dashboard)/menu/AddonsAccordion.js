@@ -8,45 +8,34 @@ import {
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { EllipsisVertical, SquareDot, Star } from "lucide-react";
-import { AddCategory } from "./page";
+import { useMenuContext } from "@/context/MenuContext";
+import { AddCategory } from "./MenuAccordion";
 
 // Recursive component to render categories and add-on items
-function AddonCategoryComponent({ category, handleItemClick }) {
+export function AddonCategoryComponent({ category }) {
   return (
-    <Accordion type="single" collapsible>
+    <Accordion type="single" collapsible value={category.name}>
       <AccordionItem value={category.name}>
         <AccordionTrigger>
           <div className="flex gap-8">{category.name}</div>
         </AccordionTrigger>
         <AccordionContent>
-          {category.subCategories
-            ? // If subcategories exist, recursively render them
-              category.subCategories.map((subCategory) => (
-                <AddonCategoryComponent
-                  key={subCategory.name}
-                  category={subCategory}
-                  handleItemClick={handleItemClick}
-                />
-              ))
-            : // If no subcategories, render the addon items
-              category.addonItems.map((item) => (
-                <AddonItemComponent
-                  key={item.name}
-                  item={item}
-                  handleItemClick={handleItemClick}
-                />
-              ))}
+          {category.addons.map((item, key) => (
+            <AddonItemComponent key={key} item={item} />
+          ))}
         </AccordionContent>
       </AccordionItem>
     </Accordion>
   );
 }
 
-function AddonItemComponent({ item, handleItemClick }) {
+export function AddonItemComponent({ item }) {
+  const { toggleItemStockStatus, toggleItemFeaturedStatus, handleItemClick } = useMenuContext();
+  
   return (
-    <div
+    <div 
       className="grid grid-cols-4 w-full hover:shadow-inner p-4"
-      onClick={() => handleItemClick(item)}
+      onClick={() => handleItemClick(item, "addons")}
     >
       <div className="col-span-2">
         <span className="flex items-center font-bold">
@@ -64,17 +53,14 @@ function AddonItemComponent({ item, handleItemClick }) {
   );
 }
 
-export function AddonsAccordion({ categories = [], handleItemClick }) {
+export function AddonsAccordion({ categories }) {
+  console.log(categories);
   return (
     <TabsContent value="addons" className="">
       <AddCategory />
       <Button className="ml-2">Add Addon</Button>
       {categories.map((category) => (
-        <AddonCategoryComponent
-          key={category.name}
-          category={category}
-          handleItemClick={handleItemClick}
-        />
+        <AddonCategoryComponent key={category.name} category={category} />
       ))}
     </TabsContent>
   );
