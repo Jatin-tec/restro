@@ -2,12 +2,13 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { UtensilsCrossed } from "lucide-react";
+import { Timer, UtensilsCrossed } from "lucide-react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { useOrderContext } from "@/context/OrderContext";
 import { updateOrderStatus, getOrders } from "@/lib/orders/getLiveOrder";
+import { Button } from "@/components/ui/button";
 
 const STATUS = {
   newOrders: "pending",
@@ -21,7 +22,7 @@ export default function LiveOrder() {
   const onDrop = async (event, toStatus) => {
     const orderId = event.dataTransfer.getData("order_id");
     const fromStatus = event.dataTransfer.getData("fromStatus");
-    
+
     if (fromStatus === toStatus) return;
 
     // Update the order status on the server
@@ -60,11 +61,8 @@ export default function LiveOrder() {
   };
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-      <div className="flex items-center">
-        <h1 className="text-lg font-semibold md:text-2xl">Live Orders</h1>
-      </div>
-      <div className="grid grid-cols-3 gap-8">
+    <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 overflow-auto">
+      <div className="grid grid-cols-3 gap-4">
         {Object.keys(liveOrder).map((status) => (
           <div
             key={status}
@@ -72,14 +70,15 @@ export default function LiveOrder() {
             onDrop={(event) => onDrop(event, status)}
             onDragOver={onDragOver}
           >
-            <div className="text-lg font-bold mb-2 flex gap-2 items-center">
+            <div className="text-lg font-bold flex gap-2 items-center">
               <span>{status.toUpperCase()}</span>
               <Badge className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                 {liveOrder[status].length}
               </Badge>
             </div>
-            <Card className="bg-muted pt-4 h-full">
-              <CardContent>
+            <Card className="bg-muted h-[80vh] overflow-y-scroll">
+              <CardContent className="p-2">
+                {/* Order Card start */}
                 {liveOrder[status].map((order) => (
                   <div
                     className="order rounded-xl my-2 hover:shadow-md bg-white"
@@ -87,27 +86,29 @@ export default function LiveOrder() {
                     onDragStart={(event) => onDragStart(event, order, status)}
                     draggable
                   >
-                    <div className="grid gap-4 p-4">
+                    <div className="grid p-4">
                       <div className="flex items-center justify-between mt-2">
                         <span className="text-sm font-medium text-muted-foreground">
                           Order placed on{" "}
                           {new Date(order.created_at).toLocaleString()}
                           <span className="flex item gap-2 text-lg mt-1">
                             ID: {order.order_id.split("-")[0]}
-                            <Badge className="bg-blue-500 text-white">
+                            <div className="bg-gray-200 text-primary text-sm font-bold px-2 items-center flex rounded-full">
                               {order.table}
-                            </Badge>
+                            </div>
                           </span>
                         </span>
                         <div className="flex flex-col items-end text-base font-medium">
-                          Order by {order.user}
+                          <span className="text-end leading-tight">
+                            Order by {order.user}
+                          </span>
                           <div className="flex items-center border bg-muted px-2 rounded-full w-fit mt-2 animate-pulse">
                             <UtensilsCrossed className="w-5 h-5 mr-2" />
                             {order.order_type}
                           </div>
                         </div>
                       </div>
-                      <Separator />
+                      <Separator className="my-2" />
                       {order.items.map((item, key) => (
                         <div
                           className="flex items-center justify-between"
@@ -120,15 +121,20 @@ export default function LiveOrder() {
                               height="16"
                               width="16"
                             />
-                            <span className="text-muted-foreground">{item.quantity} x </span>
-                            {item.food_item.name}
+                            <span className="text-muted-foreground">
+                              {item.quantity} x{" "}
+                            </span>
+                            {item.food_item.name} - Full
                           </p>
                           <span className="flex items-center text-base font-medium">
                             ₹ {item.totalPrice}
                           </span>
                         </div>
                       ))}
-                      <Separator />
+                      <span className="text-sm text-muted-foreground">
+                        Addons, Cheese
+                      </span>
+                      <Separator className="my-2" />
                       <div className="flex items-center justify-between mt-2">
                         <p className="text-base">
                           Total Bill
@@ -141,9 +147,15 @@ export default function LiveOrder() {
                           ₹ {order.total}
                         </span>
                       </div>
+                      <div className="flex justify-between mt-2">
+                        <OrderTimer order={order} />
+                        <Button className="bg-green-500 text-secondary">
+                          Start Preparing
+                        </Button>
+                      </div>
                     </div>
                     <Progress
-                      className="h-6 rounded-lg rounded-t-none"
+                      className="h-1.5 rounded-lg rounded-t-none"
                       value={50}
                     />
                   </div>
@@ -154,5 +166,35 @@ export default function LiveOrder() {
         ))}
       </div>
     </main>
+  );
+}
+
+function OrderTimer({ order }) {
+  const [elapsedTime, setElapsedTime] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const currentTime = new Date().getTime();
+      const orderTime = new Date(order.created_at).getTime();
+      const elapsedSeconds = Math.floor((currentTime - orderTime) / 1000);
+      setElapsedTime(elapsedSeconds);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [order.created_at]);
+
+  const minutesElapsed = Math.floor(elapsedTime / 60);
+  const secondsElapsed = elapsedTime % 60;
+  const timerColor =
+    minutesElapsed < 5 ? "green" : minutesElapsed < 10 ? "yellow" : "red";
+
+  return (
+    <span
+      className={`flex items-center w-fit px-2 text-sm font-bold gap-1 rounded-md bg-${timerColor}-200 text-${timerColor}-600`}
+    >
+      <Timer className="w-5 h-5" />
+      {minutesElapsed}:
+      {secondsElapsed < 10 ? `0${secondsElapsed}` : secondsElapsed}
+    </span>
   );
 }

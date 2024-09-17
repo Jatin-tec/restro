@@ -27,11 +27,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Image from "next/image";
 
 export function Sidebar() {
   const pathname = usePathname();
   const { liveOrder } = useOrderContext();
-  
+
   const navItems = [
     { href: "/", label: "Dashboard", icon: Home },
     {
@@ -52,18 +53,15 @@ export function Sidebar() {
     { href: "/offers", label: "Offers", icon: BadgePercent },
     { href: "/restaurant", label: "Outlet", icon: Store },
     { href: "/marketing", label: "Marketing", icon: Briefcase },
-    { href: "#", label: "Customers", icon: Users },
-    { href: "#", label: "Finance", icon: LineChart },
+    { href: "#", label: "Customers", icon: Users, badge: "Coming Soon" },
+    { href: "#", label: "Finance", icon: LineChart, badge: "Coming Soon" },
   ];
 
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
-            <ChefHat className="h-6 w-6" />
-            <span className="">Restro</span>
-          </Link>
+          <Image src="/image.png" width={100} height={30} alt="tacoza" />
           <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
             <Bell className="h-4 w-4" />
             <span className="sr-only">Toggle notifications</span>
